@@ -1,0 +1,19 @@
+pricing_bounds:
+  rider_adjustment_cad:
+    min: -5.0
+    max: 5.0
+  driver_bonus_cad:
+    min: 0.0
+    max: 12.0
+  subsidy_budget_cad:
+    min: 0.0
+    max: 10000.0
+
+optimization:
+  reoptimization_interval_minutes: 5
+  normalized_objective_weights:
+    rider_wait_time: 1.0
+    unserved_requests: 1.0
+    spatial_imbalance: 1.0
+    empty_vkt: 0.5
+    platform_profit: 0.5

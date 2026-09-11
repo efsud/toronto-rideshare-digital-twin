@@ -1,0 +1,25 @@
+project:
+  city: "Toronto, Ontario, Canada"
+  random_seed: 42
+
+network:
+  place: "Toronto, Ontario, Canada"
+  network_type: "drive"
+  simplify: true
+  retain_all: false
+  fallback_speed_kph: 35.0
+  graph_path: "data/processed/toronto_drive.graphml"
+
+simulation:
+  start_time: "07:00"
+  end_time: "10:00"
+  decision_interval_minutes: 5
+  fleet_size: 750
+  demand_multiplier: 1.25
+
+traffic:
+  scenario: "morning_peak"
+  use_observed_speed_data: false
+
+policy:
+  name: "fixed_baseline"

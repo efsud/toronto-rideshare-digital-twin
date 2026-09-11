@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+venv/
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Local data and generated artifacts
+# Keep directory placeholders, but do not commit large/raw datasets.
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/synthetic/*
+!data/synthetic/.gitkeep
+results/*
+!results/.gitkeep
+figures/*
+!figures/.gitkeep
+
+# OSMnx caches / graphs
+cache/
+*.graphml
+*.gpkg
