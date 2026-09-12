@@ -10,6 +10,12 @@ htmlcov/
 # Environments
 .venv/
 venv/
+.env
+
+# Task artifacts (keep README stubs)
+artifacts/**/*
+!artifacts/README.md
+!artifacts/**/README.md
 
 # IDE / OS
 .DS_Store
@@ -20,10 +26,12 @@ venv/
 # Keep directory placeholders, but do not commit large/raw datasets.
 data/raw/*
 !data/raw/.gitkeep
+!data/raw/README.md
 data/processed/*
 !data/processed/.gitkeep
 data/synthetic/*
 !data/synthetic/.gitkeep
+!data/synthetic/traffic_observations_sample.csv
 results/*
 !results/.gitkeep
 figures/*

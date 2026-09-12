@@ -1,158 +1,130 @@
 # Toronto Ride-Hailing Marketplace Digital Twin
 
-A research/portfolio simulator for traffic-aware rider-driver matching, two-sided pricing,
-driver incentives, and spatial supply-demand balancing on Toronto's street network.
+A research-grade simulator for traffic-aware rider–driver matching, two-sided pricing,
+driver incentives, and spatial supply–demand balancing on Toronto's street network.
 
-## Version 0.1 scope
+**Status:** v0.2 — road network, free-flow routing, and time-dependent traffic layer implemented.
+Marketplace simulation, optimization, and dashboard are under active development.
 
-This initial repository implements only the **road-network foundation**:
+## What works today
 
-- download Toronto's drivable OpenStreetMap network with OSMnx;
-- impute free-flow road speeds;
-- add edge-level free-flow travel times;
-- save/load the graph as GraphML;
-- find the nearest network nodes to arbitrary latitude/longitude points;
-- calculate the minimum-travel-time route;
-- report route distance and travel time;
-- unit-test route summarization without requiring a live OpenStreetMap request.
-
-Traffic observations, riders, drivers, pricing, matching, repositioning, optimization,
-SUMO, and the Streamlit dashboard are intentionally deferred to later milestones.
+| Layer | Capability |
+|-------|------------|
+| Network | Download Toronto OSM drive graph, impute speeds, save/load GraphML |
+| Routing | Shortest free-flow path; route distance and travel time |
+| Traffic | Ingest observations, map to edges, compute tau_e(t), route by departure time |
+| Tests | 12+ unit tests (synthetic graphs, no live OSM in CI) |
 
 ## Architecture
 
 ```text
-Toronto OpenStreetMap
-        |
-        v
-src/toronto_rideshare/network
-        |
-        +-- build_network.py
-        |      download -> speed -> travel_time -> GraphML
-        |
-        +-- routing.py
-               coordinates -> nearest nodes -> shortest-time path
+OpenStreetMap → network/ → GraphML
+                    ↓
+              traffic/ → edge_traffic_profile.parquet
+                    ↓
+              routing (free-flow or travel_time_t)
+                    ↓
+         [future] zones → demand/supply → marketplace → simulation → policies
 ```
-
-Future modules already have package placeholders under `src/toronto_rideshare/`.
 
 ## Environment setup
 
-OSMnx 2.1.x requires Python 3.11 or newer. Python 3.12 is recommended for this project.
-
-### Option A: standard `venv`
+Python **3.12** is recommended. Python 3.11+ is supported.
 
 ```bash
 python3.12 -m venv .venv
-source .venv/bin/activate          # macOS/Linux
+source .venv/bin/activate
 python -m pip install --upgrade pip
+pip install "pyproj>=3.5,<3.7"   # workaround if 3.7 wheels unavailable on your platform
 pip install -e ".[dev,visualization,optimization]"
 ```
 
-On Windows PowerShell:
-
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -e ".[dev,visualization,optimization]"
-```
-
-For the smallest Phase-1 install:
+Or use the helper script:
 
 ```bash
-pip install -e ".[dev]"
+bash setup.sh
 ```
 
-## Run the tests
+Copy `.env.example` to `.env` if you add API keys later. Never commit `.env`.
+
+## Quick start
+
+```bash
+# 1. Build road network (internet required, one-time)
+python examples/download_toronto_network.py
+
+# 2. Build traffic profile from synthetic or raw observations
+python examples/build_traffic_profile.py
+
+# 3. Compare routes at 07:00, 08:30, 12:00, 17:00
+python examples/time_dependent_route_demo.py
+
+# 4. Optional map + bar chart
+pip install -e ".[visualization]"
+python examples/plot_time_dependent_routes.py
+```
+
+## Tests and lint
 
 ```bash
 pytest
+ruff check src tests examples scripts
+python scripts/task_00_validate_env.py
 ```
 
-or:
-
-```bash
-pytest --cov=toronto_rideshare --cov-report=term-missing
-```
-
-## Lint
-
-```bash
-ruff check .
-ruff format --check .
-```
-
-To apply formatting:
-
-```bash
-ruff format .
-```
-
-## Build the Toronto road graph
-
-This step calls OpenStreetMap through OSMnx and therefore requires internet access.
-It can take a while because Toronto's drive network is large.
-
-```bash
-python examples/download_toronto_network.py
-```
-
-It creates:
+## Core equation
 
 ```text
-data/processed/toronto_drive.graphml
+T_trip(r, t) = min over paths P from o_r to d_r  sum_{e in P} tau_e(t)
 ```
 
-Large generated graphs are git-ignored.
+- **v0.1:** tau_e = free-flow `travel_time`
+- **v0.2:** tau_e(t) from traffic profile (`travel_time_t` at departure bucket t)
 
-## Test a route
-
-After downloading the graph:
-
-```bash
-python examples/route_demo.py
-```
-
-The demo returns:
-
-- nearest origin network node;
-- nearest destination network node;
-- route distance in km;
-- free-flow travel time in minutes;
-- ordered route-node sequence.
-
-## Core equation implemented in Version 0.1
-
-For rider `r`, the base trip time is
-
-```text
-T_trip(r, t) = min over paths P from origin_r to destination_r
-               sum over road edges e in P of tau_e(t)
-```
-
-In Version 0.1, `tau_e` is OSMnx's free-flow travel time. In the next milestone,
-Toronto traffic observations will make this cost time dependent: `tau_e(t)`.
+Edge costs are frozen at trip departure (no within-trip dynamic routing yet).
 
 ## Configuration
 
-- `configs/baseline.yaml`: baseline project/network/simulation settings.
-- `configs/morning_peak.yaml`: placeholder for the morning-peak traffic experiment.
-- `configs/policy_bounds.yaml`: future rider-price, driver-bonus, subsidy, and objective bounds.
+| File | Purpose |
+|------|---------|
+| `configs/baseline.yaml` | Baseline simulation settings |
+| `configs/morning_peak.yaml` | Morning-peak traffic scenario |
+| `configs/policy_bounds.yaml` | Future pricing/subsidy bounds |
+| `configs/scenarios/` | Traffic/demand scenario stubs |
+| `configs/experiments/` | Reproducible experiment stubs |
 
-The pricing fields are placeholders and are not used by Version 0.1 yet.
+## Data policy
 
-## Next milestone
+| Type | Source | Label |
+|------|--------|-------|
+| Road network | OpenStreetMap via OSMnx | Observed (public) |
+| Traffic (default demo) | `data/synthetic/traffic_observations_sample.csv` | Synthetic |
+| Traffic (production) | Toronto Open Data — see `data/raw/README.md` | Observed (when downloaded) |
+| Future rider OD | Synthetic calibrated to public patterns | Synthetic (documented) |
 
-**Phase 2: Toronto traffic layer**
+We do **not** reproduce Uber/Lyft proprietary pricing. Behavioral elasticities are
+configurable assumptions unless empirically estimated.
 
-1. ingest Toronto observed speed/volume counts;
-2. map observations to OSM edges;
-3. construct time-indexed `travel_time_t` edge weights;
-4. compare the fastest route for the same OD pair at 07:00, 08:30, 12:00, and 17:00;
-5. add tests for time-dependent edge costs.
+## Artifacts
 
-## Data and attribution
+Task outputs live under `artifacts/task_XX_name/`. See `artifacts/README.md`.
 
-Road-network data come from OpenStreetMap through OSMnx. Any published maps or derived
-network artifacts should retain appropriate OpenStreetMap attribution.
+## Roadmap (high level)
+
+1. ~~Network + free-flow routing~~ (done)
+2. ~~Time-dependent traffic tau_e(t)~~ (done)
+3. H3 marketplace zones, demand, drivers, simulation clock
+4. Matching, two-sided pricing, repositioning, OR-Tools optimization
+5. Experiment engine, policy comparison, Streamlit dashboard
+6. Optional SUMO / advanced ML / RL benchmarks
+
+## Limitations
+
+- Sparse synthetic traffic → many edges use highway/citywide fallbacks
+- No rider/driver marketplace loop yet
+- No SUMO integration yet
+- Dashboard not yet wired to live simulation
+
+## Attribution
+
+Road-network data from OpenStreetMap. Retain OSM attribution in published maps.

@@ -64,10 +64,10 @@ def summarize_route(
         edge = _best_parallel_edge_data(graph, u, v, weight=weight)
         if "length" not in edge:
             raise KeyError(f"Edge {u!r}->{v!r} is missing required 'length'.")
-        if "travel_time" not in edge:
-            raise KeyError(f"Edge {u!r}->{v!r} is missing required 'travel_time'.")
+        if weight not in edge:
+            raise KeyError(f"Edge {u!r}->{v!r} is missing required weight '{weight}'.")
         distance_m += float(edge["length"])
-        travel_time_s += float(edge["travel_time"])
+        travel_time_s += float(edge[weight])
 
     return RouteResult(
         route_nodes=list(route_nodes),

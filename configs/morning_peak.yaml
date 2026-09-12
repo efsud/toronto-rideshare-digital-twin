@@ -20,6 +20,9 @@ simulation:
 traffic:
   scenario: "morning_peak"
   use_observed_speed_data: false
+  observations_path: "data/synthetic/traffic_observations_sample.csv"
+  profile_path: "data/processed/edge_traffic_profile.parquet"
+  edge_map_path: "data/processed/traffic_edge_map.parquet"
 
 policy:
   name: "fixed_baseline"
