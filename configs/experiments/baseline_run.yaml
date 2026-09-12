@@ -1,0 +1,12 @@
+project:
+  random_seed: 42
+
+simulation:
+  start_time: "07:00"
+  end_time: "10:00"
+  decision_interval_minutes: 5
+  fleet_size: 20
+  demand_multiplier: 1.0
+
+policy:
+  name: "P0_fixed_baseline"

@@ -14,7 +14,6 @@ def mapping_quality_report(
     n_obs = len(observations)
     n_mapped = mapping["observation_id"].nunique() if not mapping.empty else 0
     n_edges_direct = int((profile["n_observations"] > 0).sum()) if not profile.empty else 0
-    n_edges_total = len(profile["time_bucket"].unique()) if not profile.empty else 0
     edge_rows = len(profile) if not profile.empty else 0
 
     return {

@@ -3,8 +3,9 @@
 A research-grade simulator for traffic-aware rider–driver matching, two-sided pricing,
 driver incentives, and spatial supply–demand balancing on Toronto's street network.
 
-**Status:** v0.2 — road network, free-flow routing, and time-dependent traffic layer implemented.
-Marketplace simulation, optimization, and dashboard are under active development.
+**Status:** v0.3 — network, time-dependent traffic, H3 zones, baseline marketplace simulation,
+rule-based policies, experiment runner, and Streamlit skeleton implemented.
+Full OR-Tools optimization, policy comparison dashboards, and SUMO remain in progress.
 
 ## What works today
 
@@ -13,7 +14,13 @@ Marketplace simulation, optimization, and dashboard are under active development
 | Network | Download Toronto OSM drive graph, impute speeds, save/load GraphML |
 | Routing | Shortest free-flow path; route distance and travel time |
 | Traffic | Ingest observations, map to edges, compute tau_e(t), route by departure time |
-| Tests | 12+ unit tests (synthetic graphs, no live OSM in CI) |
+| Zones | H3 cells for spatial marketplace aggregation |
+| Demand/Supply | Synthetic trip generator and driver fleet initialization |
+| Simulation | Discrete clock, greedy matching, waiting times, baseline metrics |
+| Policies | Independent rider adjustments and driver bonuses (rule-based) |
+| Experiments | YAML-driven baseline runs with JSON results |
+| Dashboard | Streamlit skeleton (`dashboard/app.py`) |
+| Tests | 21 unit tests (synthetic graphs, no live OSM in CI) |
 
 ## Architecture
 
@@ -109,14 +116,23 @@ configurable assumptions unless empirically estimated.
 
 Task outputs live under `artifacts/task_XX_name/`. See `artifacts/README.md`.
 
+## Marketplace experiment
+
+```bash
+python examples/run_baseline_experiment.py
+streamlit run dashboard/app.py
+python scripts/final_validation.py
+```
+
 ## Roadmap (high level)
 
 1. ~~Network + free-flow routing~~ (done)
 2. ~~Time-dependent traffic tau_e(t)~~ (done)
-3. H3 marketplace zones, demand, drivers, simulation clock
-4. Matching, two-sided pricing, repositioning, OR-Tools optimization
-5. Experiment engine, policy comparison, Streamlit dashboard
-6. Optional SUMO / advanced ML / RL benchmarks
+3. ~~H3 zones, demand, drivers, simulation clock~~ (baseline done)
+4. ~~Greedy matching + rule policies~~ (baseline done)
+5. OR-Tools LP optimization, network-based routing in matching, policy comparison UI
+6. Full Streamlit map layers, repeated stochastic experiments, sensitivity analysis
+7. Optional SUMO / advanced ML / RL benchmarks (see `docs/SUMO.md`)
 
 ## Limitations
 

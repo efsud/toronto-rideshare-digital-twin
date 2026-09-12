@@ -79,3 +79,31 @@ def clean_observations(observations: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         cleaned["source"] = "unknown"
 
     return cleaned.reset_index(drop=True)
+
+
+def normalize_toronto_open_data(frame: pd.DataFrame) -> pd.DataFrame:
+    """Map common Toronto Open Data column names to the normalized schema."""
+    column_map = {
+        "location_id": "observation_id",
+        "station_id": "observation_id",
+        "lat": "latitude",
+        "LATITUDE": "latitude",
+        "lon": "longitude",
+        "LONGITUDE": "longitude",
+        "lng": "longitude",
+        "timestamp": "datetime",
+        "date_time": "datetime",
+        "avg_speed": "speed_kph",
+        "speed": "speed_kph",
+        "volume": "volume",
+    }
+    normalized = frame.rename(columns={k: v for k, v in column_map.items() if k in frame.columns})
+    if "observation_id" not in normalized.columns and "location_id" in frame.columns:
+        normalized["observation_id"] = frame["location_id"].astype(str)
+    if "source" not in normalized.columns:
+        normalized["source"] = "toronto_open_data"
+    missing = REQUIRED_COLUMNS - set(normalized.columns)
+    if missing:
+        msg = f"After normalization, still missing columns: {sorted(missing)}"
+        raise ValueError(msg)
+    return normalized

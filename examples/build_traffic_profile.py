@@ -5,6 +5,8 @@ from pathlib import Path
 from toronto_rideshare.config import load_config
 from toronto_rideshare.network import load_graph
 from toronto_rideshare.traffic import build_traffic_profile_from_file, save_traffic_profile
+from toronto_rideshare.traffic.ingest import load_traffic_observations
+from toronto_rideshare.traffic.qa import mapping_quality_report
 
 DEFAULT_CONFIG = Path("configs/morning_peak.yaml")
 DEFAULT_OBSERVATIONS = Path("data/synthetic/traffic_observations_sample.csv")
@@ -29,8 +31,10 @@ def main() -> None:
         )
 
     graph = load_graph(graph_path)
+    observations = load_traffic_observations(observations_path)
     profile, mapping = build_traffic_profile_from_file(graph, observations_path)
 
+    qa = mapping_quality_report(mapping, observations, profile.edge_stats)
     save_traffic_profile(profile, PROFILE_PATH)
     EDGE_MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
     mapping.to_parquet(EDGE_MAP_PATH, index=False)
@@ -39,6 +43,9 @@ def main() -> None:
     print(f"Saved edge map to: {EDGE_MAP_PATH.resolve()}")
     print(f"Profile rows: {len(profile.edge_stats):,}")
     print(f"Mapped observations: {len(mapping):,}")
+    print("Mapping QA:")
+    for key, value in qa.items():
+        print(f"  {key}: {value}")
 
 
 if __name__ == "__main__":
