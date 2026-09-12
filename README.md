@@ -116,12 +116,65 @@ configurable assumptions unless empirically estimated.
 
 Task outputs live under `artifacts/task_XX_name/`. See `artifacts/README.md`.
 
+## Demo (portfolio)
+
+Reproduce key visualizations after setup:
+
+```bash
+# Policy comparison P0–P7 (chart + JSON)
+python examples/generate_policy_comparison_demo.py
+# → artifacts/task_policy_compare/policy_comparison_chart.png
+# → artifacts/task_policy_compare/policy_comparison_p0_p7.json
+
+# Baseline marketplace experiment
+python examples/run_baseline_experiment.py
+# → results/experiments/
+
+# Time-dependent routing (requires network + profile)
+python examples/time_dependent_route_demo.py
+
+# Sensitivity sweep
+python examples/run_sensitivity.py
+# → artifacts/task_sensitivity/sensitivity_results.json
+
+# Interactive dashboard
+streamlit run dashboard/app.py
+```
+
+| Artifact | Path |
+|----------|------|
+| Policy comparison chart | `artifacts/task_policy_compare/policy_comparison_chart.png` |
+| Policy comparison data | `artifacts/task_policy_compare/policy_comparison_p0_p7.json` |
+| Big picture doc | `docs/Toronto_Rideshare_Digital_Twin_Big_Picture.docx` |
+| PR readiness | `artifacts/PR_READINESS.md` |
+| SUMO integration guide | `docs/SUMO.md` |
+| RL benchmark outline | `docs/RL_BENCHMARK.md` |
+
 ## Marketplace experiment
 
 ```bash
 python examples/run_baseline_experiment.py
+python examples/run_policy_comparison_demo.py
+python examples/generate_demo_visualization.py
 streamlit run dashboard/app.py
 python scripts/final_validation.py
+```
+
+## Demo artifacts
+
+After running the demo script, open:
+
+| Artifact | Description |
+|----------|-------------|
+| `artifacts/task_demo/demo_summary.png` | Policy bar chart + sensitivity heatmap |
+| `artifacts/task_demo/policy_comparison.json` | P0–P7 metrics on same seed |
+| `artifacts/task_policy_compare/policy_comparison_chart.png` | Standalone policy chart |
+| `docs/Toronto_Rideshare_Digital_Twin_Big_Picture.docx` | Full project summary (Word) |
+
+Regenerate the Word summary:
+
+```bash
+python scripts/export_big_picture_docx.py
 ```
 
 ## Roadmap (high level)

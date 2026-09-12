@@ -27,6 +27,43 @@ def graph_edges_gdf(graph: nx.MultiDiGraph) -> gpd.GeoDataFrame:
     return edges
 
 
+def _nearest_with_fallback(
+    metric_obs: gpd.GeoDataFrame,
+    metric_edges: gpd.GeoDataFrame,
+    *,
+    max_distance_m: float,
+) -> gpd.GeoDataFrame:
+    """Try progressively wider search radii before giving up on an observation."""
+    radii = [max_distance_m, max_distance_m * 2, max_distance_m * 5, max_distance_m * 10]
+    joined_parts: list[gpd.GeoDataFrame] = []
+    remaining = metric_obs.copy()
+
+    for radius in radii:
+        if remaining.empty:
+            break
+        batch = gpd.sjoin_nearest(
+            remaining,
+            metric_edges,
+            how="inner",
+            distance_col="match_distance_m",
+            max_distance=radius,
+        )
+        if batch.empty:
+            continue
+        joined_parts.append(batch)
+        matched_ids = set(batch["observation_id"].astype(str))
+        remaining = remaining[~remaining["observation_id"].astype(str).isin(matched_ids)]
+
+    if not joined_parts:
+        return gpd.GeoDataFrame()
+
+    joined = pd.concat(joined_parts, ignore_index=True)
+    joined = joined.sort_values("match_distance_m").drop_duplicates(
+        subset=["observation_id"], keep="first"
+    )
+    return joined
+
+
 def map_observations_to_edges(
     observations: gpd.GeoDataFrame,
     edges: gpd.GeoDataFrame,
@@ -34,18 +71,19 @@ def map_observations_to_edges(
     max_distance_m: float = 50.0,
 ) -> pd.DataFrame:
     """Match each observation point to the nearest directed edge within max distance."""
+    if observations.empty:
+        return pd.DataFrame(columns=list(EDGE_MAP_COLUMNS))
+
     if observations.crs != edges.crs:
         observations = observations.to_crs(edges.crs)
 
     metric_obs = observations.to_crs("EPSG:3857")
     metric_edges = edges.to_crs("EPSG:3857")
 
-    joined = gpd.sjoin_nearest(
+    joined = _nearest_with_fallback(
         metric_obs,
         metric_edges,
-        how="inner",
-        distance_col="match_distance_m",
-        max_distance=max_distance_m,
+        max_distance_m=max_distance_m,
     )
 
     if joined.empty:

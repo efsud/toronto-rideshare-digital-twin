@@ -5,11 +5,10 @@ from pathlib import Path
 from toronto_rideshare.config import load_config
 from toronto_rideshare.network import load_graph
 from toronto_rideshare.traffic import build_traffic_profile_from_file, save_traffic_profile
-from toronto_rideshare.traffic.ingest import load_traffic_observations
+from toronto_rideshare.traffic.ingest import load_traffic_observations, resolve_observations_path
 from toronto_rideshare.traffic.qa import mapping_quality_report
 
 DEFAULT_CONFIG = Path("configs/morning_peak.yaml")
-DEFAULT_OBSERVATIONS = Path("data/synthetic/traffic_observations_sample.csv")
 PROFILE_PATH = Path("data/processed/edge_traffic_profile.parquet")
 EDGE_MAP_PATH = Path("data/processed/traffic_edge_map.parquet")
 
@@ -22,13 +21,11 @@ def main() -> None:
             f"{graph_path} does not exist. Run examples/download_toronto_network.py first."
         )
 
-    observations_path = Path(
-        config.get("traffic", {}).get("observations_path", DEFAULT_OBSERVATIONS)
-    )
-    if not observations_path.exists():
-        raise FileNotFoundError(
-            f"{observations_path} does not exist. See data/raw/README.md for download instructions."
-        )
+    configured_path = config.get("traffic", {}).get("observations_path")
+    observations_path = resolve_observations_path(configured_path)
+    print(f"Using traffic observations: {observations_path.resolve()}")
+    if "synthetic" in str(observations_path):
+        print("  (synthetic fallback — place Toronto Open Data CSV in data/raw/ for real data)")
 
     graph = load_graph(graph_path)
     observations = load_traffic_observations(observations_path)

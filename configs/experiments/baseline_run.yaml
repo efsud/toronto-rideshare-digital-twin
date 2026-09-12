@@ -8,5 +8,16 @@ simulation:
   fleet_size: 20
   demand_multiplier: 1.0
 
+network:
+  graph_path: "data/processed/toronto_drive.graphml"
+  traffic_profile_path: "data/processed/edge_traffic_profile.parquet"
+  use_time_dependent_routing: true
+
 policy:
   name: "P0_fixed_baseline"
+  max_rider_premium_cad: 5.0
+  max_driver_bonus_cad: 12.0
+  subsidy_budget_cad: 500.0
+  rider_price_elasticity: -0.3
+  driver_bonus_elasticity: 0.4
+  reposition_acceptance: 0.7

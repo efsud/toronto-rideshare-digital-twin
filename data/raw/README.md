@@ -15,10 +15,27 @@ Download CSV or GeoJSON exports and save them here, for example:
 data/raw/toronto_traffic_observations.csv
 ```
 
+## Toronto Open Data auto-normalization
+
+`traffic/ingest.py` automatically detects common Toronto Open Data column names and
+normalizes them via `normalize_toronto_open_data()`. Supported aliases include:
+
+| Open Data column | Normalized column |
+|------------------|-------------------|
+| `location_id`, `station_id`, `site_id` | `observation_id` |
+| `LATITUDE`, `lat`, `y` | `latitude` |
+| `LONGITUDE`, `lon`, `lng`, `x` | `longitude` |
+| `timestamp`, `date_time`, `date`+`time` | `datetime` |
+| `avg_speed`, `average_speed`, `speed_kmh` | `speed_kph` |
+
+If no file exists in `data/raw/`, `examples/build_traffic_profile.py` falls back to
+`data/synthetic/traffic_observations_sample.csv`.
+
 ## Expected normalized schema
 
-If your download uses different column names, convert it to this schema before building
-the traffic profile (or extend `traffic/ingest.py` with a dataset-specific adapter):
+`traffic/ingest.py` auto-normalizes common Toronto Open Data column names (e.g.
+`location_id`, `avg_speed`, `LATITUDE`/`LONGITUDE`). If your download uses other
+names, convert it to this schema or extend the adapter in `traffic/ingest.py`:
 
 | Column | Type | Example |
 |--------|------|---------|

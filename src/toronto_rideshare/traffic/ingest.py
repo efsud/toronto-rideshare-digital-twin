@@ -18,6 +18,8 @@ TORONTO_BOUNDS = {
 
 REQUIRED_COLUMNS = {"observation_id", "latitude", "longitude", "datetime"}
 
+SYNTHETIC_FALLBACK = Path("data/synthetic/traffic_observations_sample.csv")
+
 
 def _snap_to_time_bucket(timestamp: pd.Timestamp) -> str:
     """Map an observation timestamp to the nearest standard departure bucket."""
@@ -30,6 +32,102 @@ def _snap_to_time_bucket(timestamp: pd.Timestamp) -> str:
     return nearest_label
 
 
+def normalize_toronto_open_data(frame: pd.DataFrame) -> pd.DataFrame:
+    """Map common Toronto Open Data column names to the normalized schema."""
+    column_map = {
+        "location_id": "observation_id",
+        "station_id": "observation_id",
+        "site_id": "observation_id",
+        "count_station_id": "observation_id",
+        "lat": "latitude",
+        "LATITUDE": "latitude",
+        "y": "latitude",
+        "lon": "longitude",
+        "LONGITUDE": "longitude",
+        "lng": "longitude",
+        "x": "longitude",
+        "timestamp": "datetime",
+        "date_time": "datetime",
+        "date_time_utc": "datetime",
+        "datetime_utc": "datetime",
+        "avg_speed": "speed_kph",
+        "average_speed": "speed_kph",
+        "speed": "speed_kph",
+        "speed_kmh": "speed_kph",
+        "volume": "volume",
+        "total_volume": "volume",
+    }
+    normalized = frame.rename(columns={k: v for k, v in column_map.items() if k in frame.columns})
+
+    if "observation_id" not in normalized.columns:
+        for candidate in ("location_id", "station_id", "site_id", "count_station_id"):
+            if candidate in frame.columns:
+                normalized["observation_id"] = frame[candidate].astype(str)
+                break
+
+    if "latitude" not in normalized.columns and {"y", "x"} <= set(frame.columns):
+        normalized["latitude"] = frame["y"]
+        normalized["longitude"] = frame["x"]
+
+    if "datetime" not in normalized.columns:
+        for date_col, time_col in (("date", "time"), ("Date", "Time")):
+            if date_col in frame.columns and time_col in frame.columns:
+                normalized["datetime"] = pd.to_datetime(
+                    frame[date_col].astype(str) + " " + frame[time_col].astype(str),
+                    errors="coerce",
+                    utc=True,
+                )
+                break
+
+    if "source" not in normalized.columns:
+        normalized["source"] = "toronto_open_data"
+
+    missing = REQUIRED_COLUMNS - set(normalized.columns)
+    if missing:
+        msg = f"After normalization, still missing columns: {sorted(missing)}"
+        raise ValueError(msg)
+    return normalized
+
+
+def _is_toronto_open_data(frame: pd.DataFrame) -> bool:
+    """Heuristic: detect Toronto Open Data exports by column naming."""
+    open_data_markers = {
+        "location_id",
+        "station_id",
+        "site_id",
+        "count_station_id",
+        "avg_speed",
+        "average_speed",
+        "LATITUDE",
+        "LONGITUDE",
+    }
+    return bool(open_data_markers & set(frame.columns))
+
+
+def resolve_observations_path(path: str | Path | None = None) -> Path:
+    """Return the best available observations file, falling back to synthetic sample."""
+    if path is not None:
+        candidate = Path(path)
+        if candidate.exists():
+            return candidate
+
+    raw_dir = Path("data/raw")
+    if raw_dir.is_dir():
+        for pattern in ("*.csv", "*.geojson", "*.json"):
+            matches = sorted(raw_dir.glob(pattern))
+            if matches:
+                return matches[0]
+
+    if SYNTHETIC_FALLBACK.exists():
+        return SYNTHETIC_FALLBACK
+
+    msg = (
+        "No traffic observations found. Place Toronto Open Data CSV/GeoJSON in "
+        f"data/raw/ or ensure {SYNTHETIC_FALLBACK} exists."
+    )
+    raise FileNotFoundError(msg)
+
+
 def load_traffic_observations(path: str | Path) -> gpd.GeoDataFrame:
     """Load raw traffic observations from CSV or GeoJSON into a GeoDataFrame."""
     input_path = Path(path)
@@ -39,20 +137,21 @@ def load_traffic_observations(path: str | Path) -> gpd.GeoDataFrame:
     suffix = input_path.suffix.lower()
     if suffix == ".csv":
         frame = pd.read_csv(input_path)
-    elif suffix in {".geojson", ".json"}:
-        return gpd.read_file(input_path)
-    else:
-        msg = f"Unsupported traffic file format: {suffix}. Use .csv or .geojson."
-        raise ValueError(msg)
+        if _is_toronto_open_data(frame) or not REQUIRED_COLUMNS <= set(frame.columns):
+            frame = normalize_toronto_open_data(frame)
+        geometry = gpd.points_from_xy(frame["longitude"], frame["latitude"], crs="EPSG:4326")
+        return gpd.GeoDataFrame(frame, geometry=geometry, crs="EPSG:4326")
+    if suffix in {".geojson", ".json"}:
+        gdf = gpd.read_file(input_path)
+        if not REQUIRED_COLUMNS <= set(gdf.columns):
+            raw = pd.DataFrame(gdf.drop(columns="geometry", errors="ignore"))
+            normalized = normalize_toronto_open_data(raw)
+            for col in normalized.columns:
+                gdf[col] = normalized[col].values
+        return gdf
 
-    missing = REQUIRED_COLUMNS - set(frame.columns)
-    if missing:
-        msg = f"Traffic file missing required columns: {sorted(missing)}"
-        raise ValueError(msg)
-
-    frame["datetime"] = pd.to_datetime(frame["datetime"], utc=True, errors="coerce")
-    geometry = gpd.points_from_xy(frame["longitude"], frame["latitude"], crs="EPSG:4326")
-    return gpd.GeoDataFrame(frame, geometry=geometry, crs="EPSG:4326")
+    msg = f"Unsupported traffic file format: {suffix}. Use .csv or .geojson."
+    raise ValueError(msg)
 
 
 def clean_observations(observations: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
@@ -79,31 +178,3 @@ def clean_observations(observations: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         cleaned["source"] = "unknown"
 
     return cleaned.reset_index(drop=True)
-
-
-def normalize_toronto_open_data(frame: pd.DataFrame) -> pd.DataFrame:
-    """Map common Toronto Open Data column names to the normalized schema."""
-    column_map = {
-        "location_id": "observation_id",
-        "station_id": "observation_id",
-        "lat": "latitude",
-        "LATITUDE": "latitude",
-        "lon": "longitude",
-        "LONGITUDE": "longitude",
-        "lng": "longitude",
-        "timestamp": "datetime",
-        "date_time": "datetime",
-        "avg_speed": "speed_kph",
-        "speed": "speed_kph",
-        "volume": "volume",
-    }
-    normalized = frame.rename(columns={k: v for k, v in column_map.items() if k in frame.columns})
-    if "observation_id" not in normalized.columns and "location_id" in frame.columns:
-        normalized["observation_id"] = frame["location_id"].astype(str)
-    if "source" not in normalized.columns:
-        normalized["source"] = "toronto_open_data"
-    missing = REQUIRED_COLUMNS - set(normalized.columns)
-    if missing:
-        msg = f"After normalization, still missing columns: {sorted(missing)}"
-        raise ValueError(msg)
-    return normalized
