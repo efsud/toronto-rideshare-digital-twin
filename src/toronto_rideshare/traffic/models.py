@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -49,6 +50,36 @@ class TimeBucket:
             )
             raise ValueError(msg)
         return TimeBucket(label=normalized)
+
+    @staticmethod
+    def nearest(
+        departure_time: str,
+        available_buckets: tuple[str, ...] = DEFAULT_TIME_BUCKETS,
+    ) -> TimeBucket:
+        """Snap any HH:MM time to the nearest available circular-day bucket."""
+        if not available_buckets:
+            raise ValueError("At least one traffic time bucket is required")
+
+        def minute_of_day(value: str) -> int:
+            try:
+                parsed = datetime.strptime(value.strip(), "%H:%M")
+            except ValueError as exc:
+                raise ValueError(f"Invalid departure time {value!r}; expected HH:MM") from exc
+            return parsed.hour * 60 + parsed.minute
+
+        target = minute_of_day(departure_time)
+        label = min(
+            available_buckets,
+            key=lambda bucket: (
+                min(
+                    abs(minute_of_day(bucket) - target),
+                    1440 - abs(minute_of_day(bucket) - target),
+                ),
+                minute_of_day(bucket),
+                bucket,
+            ),
+        )
+        return TimeBucket(label=label)
 
 
 @dataclass(frozen=True, slots=True)

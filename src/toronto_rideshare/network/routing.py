@@ -55,8 +55,17 @@ def summarize_route(
     This helper is intentionally independent of OSMnx so it can be unit-tested
     using tiny synthetic NetworkX graphs.
     """
-    if len(route_nodes) < 2:
-        raise ValueError("A route must contain at least two nodes.")
+    if not route_nodes:
+        raise ValueError("A route must contain at least one node.")
+    if len(route_nodes) == 1:
+        node = int(route_nodes[0])
+        return RouteResult(
+            route_nodes=[node],
+            origin_node=node,
+            destination_node=node,
+            distance_km=0.0,
+            travel_time_min=0.0,
+        )
 
     distance_m = 0.0
     travel_time_s = 0.0

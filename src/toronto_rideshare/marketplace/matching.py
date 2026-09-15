@@ -42,14 +42,31 @@ class RoutingContext:
     use_time_dependent: bool = True
 
 
-def _route_or_haversine(
+@dataclass(frozen=True, slots=True)
+class RouteEstimate:
+    distance_km: float
+    travel_time_min: float
+    mode: str
+    fallback_reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class BatchAssignment:
+    pairs: tuple[tuple[str, str, float], ...]
+    strategy: str
+    backend: str
+    total_pickup_min: float
+    fallback_reason: str | None = None
+
+
+def estimate_route(
     origin: tuple[float, float],
     destination: tuple[float, float],
     *,
     routing: RoutingContext | None,
     departure_time: str,
-) -> tuple[float, float]:
-    """Return (distance_km, travel_time_min), falling back to haversine on failure."""
+) -> RouteEstimate:
+    """Route one leg and explicitly report network or fallback behavior."""
     if routing is not None:
         try:
             if routing.profile is not None and routing.use_time_dependent:
@@ -64,13 +81,164 @@ def _route_or_haversine(
                 )
             else:
                 result = shortest_time_route(routing.graph, origin, destination)
-            return result.distance_km, result.travel_time_min
-        except (ValueError, KeyError, nx.NetworkXNoPath):
-            pass
+            mode = (
+                "time-dependent network"
+                if routing.profile is not None and routing.use_time_dependent
+                else "network free-flow"
+            )
+            return RouteEstimate(result.distance_km, result.travel_time_min, mode)
+        except (ValueError, KeyError, nx.NetworkXNoPath) as exc:
+            fallback_reason = f"{type(exc).__name__}: {exc}"
+    else:
+        fallback_reason = "no routing context configured"
 
     dist_km = _haversine_km(origin[0], origin[1], destination[0], destination[1])
     speed_kph = 30.0 if dist_km < 5.0 else 25.0
-    return dist_km, dist_km / speed_kph * 60.0
+    return RouteEstimate(
+        dist_km,
+        dist_km / speed_kph * 60.0,
+        "haversine fallback",
+        fallback_reason,
+    )
+
+
+def route_or_haversine(
+    origin: tuple[float, float],
+    destination: tuple[float, float],
+    *,
+    routing: RoutingContext | None,
+    departure_time: str,
+) -> tuple[float, float]:
+    """Compatibility wrapper returning ``(distance_km, travel_time_min)``."""
+    result = estimate_route(
+        origin, destination, routing=routing, departure_time=departure_time
+    )
+    return result.distance_km, result.travel_time_min
+
+
+def pickup_candidates(
+    trip: TripRequest,
+    drivers: list[Driver],
+    current_time_min: float,
+    *,
+    routing: RoutingContext | None = None,
+) -> list[tuple[float, Driver, RouteEstimate]]:
+    """Return eligible drivers in deterministic pickup-cost order."""
+    departure = min_to_departure_time(current_time_min)
+    candidates = []
+    for driver in drivers:
+        if driver.status != DriverStatus.IDLE or driver.available_time_min > current_time_min:
+            continue
+        route = estimate_route(
+            (driver.lat, driver.lon),
+            (trip.origin_lat, trip.origin_lon),
+            routing=routing,
+            departure_time=departure,
+        )
+        candidates.append((route.travel_time_min, driver, route))
+    return sorted(candidates, key=lambda item: (item[0], item[1].driver_id))
+
+
+def batch_assign(
+    pending_trips: list[TripRequest],
+    drivers: list[Driver],
+    current_time_min: float,
+    *,
+    routing: RoutingContext | None = None,
+    use_ortools: bool = True,
+) -> BatchAssignment:
+    """Minimize total pickup time for one deterministic rider/driver batch."""
+    trips = sorted(pending_trips, key=lambda trip: (trip.request_time_min, trip.request_id))
+    available = sorted(
+        (
+            driver
+            for driver in drivers
+            if driver.status == DriverStatus.IDLE
+            and driver.available_time_min <= current_time_min
+        ),
+        key=lambda driver: driver.driver_id,
+    )
+    if not trips or not available:
+        return BatchAssignment((), "min_total_pickup", "none", 0.0)
+
+    costs: dict[tuple[int, int], float] = {}
+    for i, trip in enumerate(trips):
+        for j, driver in enumerate(available):
+            route = estimate_route(
+                (driver.lat, driver.lon),
+                (trip.origin_lat, trip.origin_lon),
+                routing=routing,
+                departure_time=min_to_departure_time(current_time_min),
+            )
+            costs[i, j] = route.travel_time_min
+
+    if use_ortools:
+        try:
+            from ortools.linear_solver import pywraplp
+
+            solver = pywraplp.Solver.CreateSolver("SCIP")
+            if solver is None:
+                raise RuntimeError("SCIP backend unavailable")
+            variables = {
+                (i, j): solver.BoolVar(f"x_{i}_{j}")
+                for i in range(len(trips))
+                for j in range(len(available))
+            }
+            for i in range(len(trips)):
+                solver.Add(sum(variables[i, j] for j in range(len(available))) <= 1)
+            for j in range(len(available)):
+                solver.Add(sum(variables[i, j] for i in range(len(trips))) <= 1)
+            count = min(len(trips), len(available))
+            solver.Add(sum(variables.values()) == count)
+            solver.Minimize(
+                sum(
+                    (round(costs[i, j], 9) + i * 1e-9 + j * 1e-12) * variable
+                    for (i, j), variable in variables.items()
+                )
+            )
+            if solver.Solve() != pywraplp.Solver.OPTIMAL:
+                raise RuntimeError("assignment solver did not find an optimum")
+            selected = [
+                (i, j)
+                for (i, j), variable in variables.items()
+                if variable.solution_value() > 0.5
+            ]
+            backend = "ortools-scip"
+            fallback_reason = None
+        except (ImportError, RuntimeError) as exc:
+            selected = []
+            remaining = set(range(len(available)))
+            for i in range(len(trips)):
+                if not remaining:
+                    break
+                j = min(remaining, key=lambda index: (costs[i, index], index))
+                selected.append((i, j))
+                remaining.remove(j)
+            backend = "deterministic-greedy-fallback"
+            fallback_reason = f"{type(exc).__name__}: {exc}"
+    else:
+        selected = []
+        remaining = set(range(len(available)))
+        for i in range(len(trips)):
+            if not remaining:
+                break
+            j = min(remaining, key=lambda index: (costs[i, index], index))
+            selected.append((i, j))
+            remaining.remove(j)
+        backend = "deterministic-greedy"
+        fallback_reason = None
+
+    pairs = tuple(
+        (trips[i].request_id, available[j].driver_id, costs[i, j])
+        for i, j in sorted(selected)
+    )
+    return BatchAssignment(
+        pairs,
+        "min_total_pickup",
+        backend,
+        sum(pair[2] for pair in pairs),
+        fallback_reason,
+    )
 
 
 def greedy_match(
@@ -99,23 +267,11 @@ def greedy_match(
         if not available:
             break
 
-        def pickup_cost(d: Driver, t: TripRequest = trip) -> float:
-            _, pickup_min = _route_or_haversine(
-                (d.lat, d.lon),
-                (t.origin_lat, t.origin_lon),
-                routing=routing,
-                departure_time=departure_time,
-            )
-            return pickup_min
-
-        best_driver = min(available, key=pickup_cost)
-        _, pickup_min = _route_or_haversine(
-            (best_driver.lat, best_driver.lon),
-            (trip.origin_lat, trip.origin_lon),
-            routing=routing,
-            departure_time=departure_time,
+        candidates = pickup_candidates(
+            trip, available, current_time_min, routing=routing
         )
-        trip_km, trip_min = _route_or_haversine(
+        pickup_min, best_driver, _ = candidates[0]
+        trip_route = estimate_route(
             (trip.origin_lat, trip.origin_lon),
             (trip.destination_lat, trip.destination_lon),
             routing=routing,
@@ -126,16 +282,20 @@ def greedy_match(
             rider_adj, driver_bonus = zone_adjustments[trip.origin_zone]
 
         fare = compute_fare(
-            trip_km,
-            trip_min,
+            trip_route.distance_km,
+            trip_route.travel_time_min,
             rider_adjustment_cad=rider_adj,
             driver_bonus_cad=driver_bonus,
         )
         best_driver.status = DriverStatus.WITH_RIDER
-        best_driver.available_time_min = current_time_min + pickup_min + trip_min
+        best_driver.available_time_min = (
+            current_time_min + pickup_min + trip_route.travel_time_min
+        )
         best_driver.lat = trip.destination_lat
         best_driver.lon = trip.destination_lon
         best_driver.zone = trip.destination_zone
         available.remove(best_driver)
-        results.append((trip, best_driver, pickup_min, trip_min, fare))
+        results.append(
+            (trip, best_driver, pickup_min, trip_route.travel_time_min, fare)
+        )
     return results

@@ -6,7 +6,9 @@ simulation:
   end_time: "10:00"
   decision_interval_minutes: 5
   fleet_size: 20
+  base_trip_count: 20
   demand_multiplier: 1.0
+  rider_max_wait_minutes: 15
 
 network:
   graph_path: "data/processed/toronto_drive.graphml"
@@ -21,3 +23,9 @@ policy:
   rider_price_elasticity: -0.3
   driver_bonus_elasticity: 0.4
   reposition_acceptance: 0.7
+  acceptance_intercept: 0.5
+  acceptance_earnings_per_cad: 0.1
+  acceptance_pickup_minutes_penalty: 0.18
+  fairness_bound_cad: 3.0
+  predicted_demand_response_per_cad: 0.06
+  predicted_supply_response_per_cad: 0.04

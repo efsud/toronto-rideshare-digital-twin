@@ -16,13 +16,14 @@ def generate_trips(
     random_seed: int = 42,
     demand_multiplier: float = 1.0,
 ) -> list[TripRequest]:
-    """Generate synthetic OD trips between random zone pairs."""
+    """Generate demand; multiplier scales count, never the arrival window."""
     rng = np.random.default_rng(random_seed)
     trips: list[TripRequest] = []
     if not zone_ids:
         return trips
 
-    for i in range(n_trips):
+    scaled_count = max(0, int(round(n_trips * demand_multiplier)))
+    for i in range(scaled_count):
         origin_zone = str(rng.choice(zone_ids))
         dest_zone = str(rng.choice(zone_ids))
         o_lat, o_lon = zone_center(origin_zone)
@@ -32,7 +33,7 @@ def generate_trips(
         o_lon += float(rng.normal(0, 0.001))
         d_lat += float(rng.normal(0, 0.001))
         d_lon += float(rng.normal(0, 0.001))
-        t_min = start_time_min + float(rng.uniform(0, 180)) * demand_multiplier
+        t_min = start_time_min + float(rng.uniform(0, 180))
         trips.append(
             TripRequest(
                 request_id=f"R{i:05d}",

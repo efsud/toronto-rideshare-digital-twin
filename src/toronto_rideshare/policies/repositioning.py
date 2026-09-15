@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from toronto_rideshare.supply.models import Driver, DriverStatus
-from toronto_rideshare.zones import zone_center
 
 
 def suggest_reposition_targets(
@@ -14,7 +13,11 @@ def suggest_reposition_targets(
 ) -> dict[str, str]:
     """Assign idle drivers in oversupplied zones to most undersupplied zones."""
     undersupplied = sorted(
-        zone_imbalance.items(),
+        (
+            item
+            for item in zone_imbalance.items()
+            if float(item[1]["imbalance"]) > 0.0
+        ),
         key=lambda item: item[1]["imbalance"],
         reverse=True,
     )[:top_k]
@@ -29,8 +32,4 @@ def suggest_reposition_targets(
         info = zone_imbalance.get(driver.zone, {"imbalance": 0.0})
         if info["imbalance"] < 0:
             assignments[driver.driver_id] = target_zone
-            lat, lon = zone_center(target_zone)
-            driver.lat, driver.lon = lat, lon
-            driver.zone = target_zone
-            driver.status = DriverStatus.REPOSITIONING
     return assignments

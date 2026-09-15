@@ -5,14 +5,17 @@ from __future__ import annotations
 import networkx as nx
 
 from toronto_rideshare.network.routing import RouteResult, shortest_time_route
-from toronto_rideshare.traffic.models import TimeBucket, TrafficProfile
+from toronto_rideshare.traffic.models import DEFAULT_TIME_BUCKETS, TimeBucket, TrafficProfile
 
 TRAVEL_TIME_T_ATTR = "travel_time_t"
 
 
-def departure_time_to_bucket(departure_time: str) -> TimeBucket:
-    """Map a clock time string to a supported departure bucket."""
-    return TimeBucket.from_departure_time(departure_time)
+def departure_time_to_bucket(
+    departure_time: str,
+    available_buckets: tuple[str, ...] | None = None,
+) -> TimeBucket:
+    """Snap a clock time to the nearest supported traffic bucket."""
+    return TimeBucket.nearest(departure_time, available_buckets or DEFAULT_TIME_BUCKETS)
 
 
 def get_edge_travel_time(
@@ -24,7 +27,7 @@ def get_edge_travel_time(
     profile: TrafficProfile,
 ) -> float:
     """Look up tau_e(t) for one directed edge."""
-    bucket = departure_time_to_bucket(departure_time).label
+    bucket = departure_time_to_bucket(departure_time, profile.time_buckets).label
     travel_time_s = profile.lookup_travel_time_s(u, v, key, bucket)
     if travel_time_s is not None:
         return travel_time_s
@@ -39,7 +42,7 @@ def apply_travel_times(
     departure_time: str,
 ) -> nx.MultiDiGraph:
     """Attach ``travel_time_t`` edge weights for the requested departure bucket."""
-    bucket = departure_time_to_bucket(departure_time).label
+    bucket = departure_time_to_bucket(departure_time, profile.time_buckets).label
     bucket_stats = profile.edge_stats[profile.edge_stats["time_bucket"] == bucket]
     lookup = {
         (int(row.u), int(row.v), int(row.key)): float(row.travel_time_s)

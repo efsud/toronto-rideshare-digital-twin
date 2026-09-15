@@ -27,9 +27,18 @@ def test_summarize_route_uses_fastest_parallel_edge() -> None:
     assert math.isclose(result.travel_time_min, 5.0)
 
 
-def test_route_requires_two_nodes() -> None:
-    with pytest.raises(ValueError, match="at least two nodes"):
-        summarize_route(make_graph(), [1])
+def test_origin_equals_destination_has_zero_network_route() -> None:
+    result = summarize_route(make_graph(), [1])
+
+    assert result.route_nodes == [1]
+    assert result.origin_node == result.destination_node == 1
+    assert result.distance_km == 0.0
+    assert result.travel_time_min == 0.0
+
+
+def test_empty_route_is_rejected() -> None:
+    with pytest.raises(ValueError, match="at least one node"):
+        summarize_route(make_graph(), [])
 
 
 def test_missing_edge_raises_clear_error() -> None:

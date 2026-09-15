@@ -38,7 +38,7 @@ def build_document() -> Document:
 
     title = doc.add_heading("Toronto Ride-Hailing Marketplace Digital Twin", level=0)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    subtitle = doc.add_paragraph("Big Picture Project Summary")
+    subtitle = doc.add_paragraph("v0.4 Big Picture Project Summary")
     subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
     doc.add_paragraph(f"Generated: {generated}")
     doc.add_paragraph(
@@ -103,20 +103,20 @@ def build_document() -> Document:
         "at 07:00, 08:30, 12:00, and 17:00."
     )
 
-    doc.add_heading("Layer 3 — Marketplace Skeleton (Tasks 07–25)", level=2)
+    doc.add_heading("Layer 3 — Marketplace and policy engine", level=2)
     _add_table(
         doc,
         ["Component", "Location", "Maturity"],
         [
-            ["H3 zoning", "zones/h3_zones.py", "Basic"],
-            ["Synthetic demand", "demand/generator.py", "Basic"],
-            ["Driver fleet", "supply/fleet.py", "Basic"],
-            ["Simulation engine", "simulation/engine.py", "Basic"],
-            ["Greedy matching", "marketplace/matching.py", "Straight-line proxy"],
-            ["Two-sided fares", "marketplace/fares.py", "Basic"],
-            ["Rule policies", "policies/", "Stub rules"],
-            ["Experiment runner", "experiments/runner.py", "YAML to JSON"],
-            ["Streamlit dashboard", "dashboard/app.py", "Skeleton"],
+            ["H3 zoning", "zones/h3_zones.py", "Toronto boundary clipped"],
+            ["Synthetic demand", "demand/generator.py", "Seeded intensity scaling"],
+            ["Driver fleet", "supply/fleet.py", "Seeded"],
+            ["Simulation engine", "simulation/engine.py", "Explicit movement phases"],
+            ["Matching", "marketplace/matching.py", "Greedy + OR-Tools batch"],
+            ["Two-sided fares", "marketplace/fares.py", "Explicit accounting"],
+            ["Policies", "policies/", "P0–P7 registry"],
+            ["Experiment runner", "experiments/runner.py", "YAML + metadata"],
+            ["Streamlit dashboard", "dashboard/app.py", "Interactive control room"],
         ],
     )
 
@@ -124,8 +124,8 @@ def build_document() -> Document:
     for item in [
         "GitHub Actions CI (.github/workflows/ci.yml)",
         "artifacts/ task output convention",
-        "21 unit tests across 13 test files",
-        "configs/scenarios/ and configs/experiments/ stubs",
+        "Pytest suite with Streamlit AppTest and OR-Tools execution",
+        "configs/scenarios/ and configs/experiments/",
         "scripts/task_00_validate_env.py and scripts/final_validation.py",
     ]:
         doc.add_paragraph(item, style="List Bullet")
@@ -134,19 +134,17 @@ def build_document() -> Document:
 
     doc.add_heading("High Priority", level=2)
     for item in [
-        "Wire OSM time-dependent routing into matching (replace haversine proxy)",
         "Ingest real Toronto Open Data traffic observations",
-        "Implement OR-Tools LP for zone pricing and driver incentives",
-        "Build policy comparison engine (P0 through P7 on same seed)",
+        "Calibrate behavioral response coefficients against defensible public evidence",
+        "Validate policy outcomes over larger stochastic scenario sets",
     ]:
         doc.add_paragraph(item, style="List Number")
 
     doc.add_heading("Medium Priority", level=2)
     for item in [
-        "Rider and driver behavioral response models",
-        "Driver repositioning integrated in simulation loop",
-        "Full Streamlit map layers (PyDeck/Plotly)",
-        "Repeated stochastic experiments with confidence intervals",
+        "Continuous route interpolation for presentation",
+        "Larger-scale assignment performance benchmarking",
+        "Real-data traffic coverage and freshness monitoring",
     ]:
         doc.add_paragraph(item, style="List Number")
 
@@ -197,7 +195,7 @@ def build_document() -> Document:
             ["marketplace/", "Matching and fare computation"],
             ["simulation/", "Clock, waiting times, engine"],
             ["policies/", "Rule-based pricing and repositioning"],
-            ["optimization/", "Pricing optimization stub"],
+            ["optimization/", "Bounded OR-Tools pricing optimization"],
             ["experiments/", "YAML experiment runner"],
             ["config.py", "Load YAML configuration files"],
         ],
@@ -210,10 +208,10 @@ def build_document() -> Document:
         [
             ["Network + routing", "100%"],
             ["Time-dependent traffic", "80%"],
-            ["Marketplace simulation", "40%"],
-            ["OR-Tools optimization", "15%"],
-            ["Dashboard + visualization", "20%"],
-            ["Policy comparison", "20%"],
+            ["Marketplace simulation", "75%"],
+            ["OR-Tools optimization", "65%"],
+            ["Dashboard + visualization", "75%"],
+            ["Policy comparison", "75%"],
             ["SUMO / RL / advanced ML", "0% (planned only)"],
         ],
     )
@@ -267,9 +265,9 @@ def build_document() -> Document:
     doc.add_paragraph("Current limitations:")
     for item in [
         "Sparse synthetic traffic; many edges use fallback speeds",
-        "Matching uses straight-line distance, not OSM routing yet",
-        "Optimization is heuristic stub, not full OR-Tools LP",
-        "Dashboard shows metrics only, not interactive maps yet",
+        "Haversine is used only when no usable network route is available",
+        "Behavior coefficients are explicit assumptions, not causal estimates",
+        "Movement uses discrete endpoints rather than continuous interpolation",
         "Edge costs frozen at trip departure (no within-trip dynamic routing)",
     ]:
         doc.add_paragraph(item, style="List Bullet")

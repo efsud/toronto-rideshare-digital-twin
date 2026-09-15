@@ -3,9 +3,9 @@
 A research-grade simulator for traffic-aware rider–driver matching, two-sided pricing,
 driver incentives, and spatial supply–demand balancing on Toronto's street network.
 
-**Status:** v0.3 — network, time-dependent traffic, H3 zones, baseline marketplace simulation,
-rule-based policies, experiment runner, and Streamlit skeleton implemented.
-Full OR-Tools optimization, policy comparison dashboards, and SUMO remain in progress.
+**Status:** v0.4 — network/time-dependent routing, Toronto-clipped H3 zones,
+step-observable marketplace simulation, policy experiments, and an interactive
+Streamlit control room are implemented. SUMO remains optional future work.
 
 ## What works today
 
@@ -14,13 +14,13 @@ Full OR-Tools optimization, policy comparison dashboards, and SUMO remain in pro
 | Network | Download Toronto OSM drive graph, impute speeds, save/load GraphML |
 | Routing | Shortest free-flow path; route distance and travel time |
 | Traffic | Ingest observations, map to edges, compute tau_e(t), route by departure time |
-| Zones | H3 cells for spatial marketplace aggregation |
+| Zones | H3 cells center-contained in an official-data-derived Toronto boundary |
 | Demand/Supply | Synthetic trip generator and driver fleet initialization |
-| Simulation | Discrete clock, greedy matching, waiting times, baseline metrics |
-| Policies | Independent rider adjustments and driver bonuses (rule-based) |
-| Experiments | YAML-driven baseline runs with JSON results |
-| Dashboard | Streamlit skeleton (`dashboard/app.py`) |
-| Tests | 21 unit tests (synthetic graphs, no live OSM in CI) |
+| Simulation | Explicit pickup/trip/reposition phases, cancellations, reset/step/run snapshots |
+| Policies | P0 greedy through P7 behavior-aware optimization and repositioning |
+| Experiments | YAML-driven seeded runs with routing, behavior, fiscal, and strategy metadata |
+| Dashboard | Stateful control room with H3, agents, offers, routes, KPIs, logs, comparisons |
+| Tests | Pytest suite including AppTest and actual OR-Tools execution in CI |
 
 ## Architecture
 
@@ -31,7 +31,7 @@ OpenStreetMap → network/ → GraphML
                     ↓
               routing (free-flow or travel_time_t)
                     ↓
-         [future] zones → demand/supply → marketplace → simulation → policies
+              zones → demand/supply → marketplace → simulation → policies
 ```
 
 ## Environment setup
@@ -42,7 +42,6 @@ Python **3.12** is recommended. Python 3.11+ is supported.
 python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-pip install "pyproj>=3.5,<3.7"   # workaround if 3.7 wheels unavailable on your platform
 pip install -e ".[dev,visualization,optimization]"
 ```
 
@@ -75,7 +74,7 @@ python examples/plot_time_dependent_routes.py
 
 ```bash
 pytest
-ruff check src tests examples scripts
+ruff check src tests examples scripts dashboard
 python scripts/task_00_validate_env.py
 ```
 
@@ -89,6 +88,10 @@ T_trip(r, t) = min over paths P from o_r to d_r  sum_{e in P} tau_e(t)
 - **v0.2:** tau_e(t) from traffic profile (`travel_time_t` at departure bucket t)
 
 Edge costs are frozen at trip departure (no within-trip dynamic routing yet).
+Arbitrary `HH:MM` departures deterministically snap to the nearest available
+traffic-profile bucket; ties choose the earlier clock bucket. Every route result
+labels time-dependent network, free-flow network, or haversine fallback and
+includes a fallback reason when applicable.
 
 ## Configuration
 
@@ -96,9 +99,9 @@ Edge costs are frozen at trip departure (no within-trip dynamic routing yet).
 |------|---------|
 | `configs/baseline.yaml` | Baseline simulation settings |
 | `configs/morning_peak.yaml` | Morning-peak traffic scenario |
-| `configs/policy_bounds.yaml` | Future pricing/subsidy bounds |
-| `configs/scenarios/` | Traffic/demand scenario stubs |
-| `configs/experiments/` | Reproducible experiment stubs |
+| `configs/policy_bounds.yaml` | Pricing/subsidy bounds |
+| `configs/scenarios/` | Traffic/demand scenarios |
+| `configs/experiments/` | Reproducible experiments |
 
 ## Data policy
 
@@ -107,7 +110,7 @@ Edge costs are frozen at trip departure (no within-trip dynamic routing yet).
 | Road network | OpenStreetMap via OSMnx | Observed (public) |
 | Traffic (default demo) | `data/synthetic/traffic_observations_sample.csv` | Synthetic |
 | Traffic (production) | Toronto Open Data — see `data/raw/README.md` | Observed (when downloaded) |
-| Future rider OD | Synthetic calibrated to public patterns | Synthetic (documented) |
+| Rider OD | Synthetic generator with assumed parameters | Synthetic (uncalibrated) |
 
 We do **not** reproduce Uber/Lyft proprietary pricing. Behavioral elasticities are
 configurable assumptions unless empirically estimated.
@@ -126,6 +129,10 @@ python examples/generate_policy_comparison_demo.py
 # → artifacts/task_policy_compare/policy_comparison_chart.png
 # → artifacts/task_policy_compare/policy_comparison_p0_p7.json
 
+# Repeated-seed P0–P7 comparison with common random numbers and 95% intervals
+python examples/run_repeated_policy_comparison.py --replicates 3
+# → artifacts/task_policy_compare/repeated_policy_comparison.json
+
 # Baseline marketplace experiment
 python examples/run_baseline_experiment.py
 # → results/experiments/
@@ -133,12 +140,16 @@ python examples/run_baseline_experiment.py
 # Time-dependent routing (requires network + profile)
 python examples/time_dependent_route_demo.py
 
+# Analytical OD route check; includes Toronto when local GraphML/profile exist
+PYTHONPATH=src python artifacts/task_route_validation/run_route_check.py
+# → artifacts/task_route_validation/route_validation_report.json
+
 # Sensitivity sweep
 python examples/run_sensitivity.py
 # → artifacts/task_sensitivity/sensitivity_results.json
 
 # Interactive dashboard
-streamlit run dashboard/app.py
+.venv/bin/streamlit run dashboard/app.py
 ```
 
 | Artifact | Path |
@@ -183,17 +194,25 @@ python scripts/export_big_picture_docx.py
 2. ~~Time-dependent traffic tau_e(t)~~ (done)
 3. ~~H3 zones, demand, drivers, simulation clock~~ (baseline done)
 4. ~~Greedy matching + rule policies~~ (baseline done)
-5. OR-Tools LP optimization, network-based routing in matching, policy comparison UI
-6. Full Streamlit map layers, repeated stochastic experiments, sensitivity analysis
+5. ~~OR-Tools LP optimization, network matching, policy comparison UI~~ (baseline done)
+6. ~~Streamlit map layers, stochastic experiments, sensitivity analysis~~ (baseline done)
 7. Optional SUMO / advanced ML / RL benchmarks (see `docs/SUMO.md`)
 
-## Limitations
+## Data and simulation truth labels
 
 - Sparse synthetic traffic → many edges use highway/citywide fallbacks
-- No rider/driver marketplace loop yet
+- Rider requests and drivers are synthetic; acceptance coefficients are assumed
+- Aggregate validation hooks remain `uncalibrated` until a local observed dataset
+  and provenance record are supplied through `toronto_rideshare.validation`
+- The simulator uses discrete decision epochs and endpoint jumps, not GPS physics
+- H3 coverage derives from official City ward polygons, dissolved and simplified;
+  it is suitable for analysis/display but is not a legal survey boundary
+- Without local GraphML, the app visibly falls back to straight-line haversine times
 - No SUMO integration yet
-- Dashboard not yet wired to live simulation
 
 ## Attribution
 
-Road-network data from OpenStreetMap. Retain OSM attribution in published maps.
+Road-network and basemap data from OpenStreetMap. Toronto coverage derives from
+City of Toronto Open Data, “City Wards”:
+https://open.toronto.ca/dataset/city-wards/. Full source and derivation metadata
+are persisted in `src/toronto_rideshare/zones/data/toronto_boundary.geojson`.
