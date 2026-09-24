@@ -206,7 +206,7 @@ def render_map(engine):
                 id="entities",
                 get_position="[lon, lat]",
                 get_text="symbol",
-                character_set="auto",
+                character_set=pdk.types.String("auto"),
                 get_color="color",
                 get_size=22,
                 pickable=True,

@@ -10,7 +10,7 @@ def test_dashboard_starts_steps_resets_and_has_map():
     assert not at.exception
     assert at.title[0].value == "Explore a city. Question a policy."
     engine = at.session_state["engine"]
-    assert at.get("deck_gl_json_chart")
+    assert '"characterSet": "auto"' in at.get("deck_gl_json_chart")[0].proto.json
     at.button(key="step").click().run()
     assert not at.exception
     assert at.session_state["engine"] is engine
