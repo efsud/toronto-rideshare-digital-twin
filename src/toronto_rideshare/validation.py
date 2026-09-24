@@ -1,18 +1,16 @@
-"""Honest calibration/validation hooks for local Toronto public datasets."""
+"""Evidence-aware validation. Comparison is not proof of predictive validity."""
 
 from __future__ import annotations
 
+import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
 
 import pandas as pd
 
 
 @dataclass(frozen=True, slots=True)
 class DatasetProvenance:
-    """Minimum provenance required before observed-data validation is reported."""
-
     dataset_name: str
     source_url: str
     retrieved_at: str
@@ -24,25 +22,17 @@ class DatasetProvenance:
 @dataclass(frozen=True, slots=True)
 class ValidationReport:
     status: str
-    provenance: dict[str, Any] | None
+    provenance: dict | None
     metric_errors: dict[str, float]
     note: str
 
 
 class TorontoPublicDataAdapter:
-    """Load a local export while keeping source and retrieval metadata attached."""
-
     def __init__(self, provenance: DatasetProvenance) -> None:
         self.provenance = provenance
 
-    def load_csv(self, *, required_columns: tuple[str, ...] = ()) -> pd.DataFrame:
-        path = Path(self.provenance.local_path)
-        if not path.exists():
-            raise FileNotFoundError(
-                f"Observed dataset is not local: {path}. Download it from "
-                f"{self.provenance.source_url} and retain its retrieval metadata."
-            )
-        frame = pd.read_csv(path)
+    def load_csv(self, *, required_columns=()) -> pd.DataFrame:
+        frame = pd.read_csv(self.provenance.local_path)
         missing = set(required_columns) - set(frame.columns)
         if missing:
             raise ValueError(f"Observed dataset missing columns: {sorted(missing)}")
@@ -50,26 +40,46 @@ class TorontoPublicDataAdapter:
 
 
 def validate_aggregate_metrics(
-    simulated: dict[str, float],
-    observed: dict[str, float] | None = None,
-    *,
-    provenance: DatasetProvenance | None = None,
+    simulated, observed=None, *, provenance=None, criteria=None, criteria_description=None
 ) -> ValidationReport:
-    """Return errors only when real observed values and provenance are supplied."""
-    if observed is None or provenance is None:
+    source = asdict(provenance) if provenance else None
+    if observed is None:
         return ValidationReport(
-            status="uncalibrated",
-            provenance=asdict(provenance) if provenance else None,
-            metric_errors={},
-            note=(
-                "No observed Toronto comparison was supplied. Simulation outputs remain "
-                "synthetic/assumed and are not calibration evidence."
-            ),
+            "not_evaluated", source, {}, "No observed comparison; not calibration evidence."
         )
     overlap = sorted(set(simulated) & set(observed))
+    complete = provenance and all(
+        str(getattr(provenance, key)).strip()
+        for key in ("dataset_name", "source_url", "retrieved_at", "license_name", "local_path")
+    )
+    if (
+        not overlap
+        or not complete
+        or not all(
+            math.isfinite(simulated[key]) and math.isfinite(observed[key]) for key in overlap
+        )
+        or (provenance.observed and not Path(provenance.local_path).is_file())
+    ):
+        return ValidationReport(
+            "insufficient_data",
+            source,
+            {},
+            "Finite overlapping metrics and complete source evidence required.",
+        )
+    errors = {key: simulated[key] - observed[key] for key in overlap}
+    if not provenance.observed:
+        return ValidationReport("synthetic_benchmark", source, errors, "Synthetic comparison only.")
+    status = "compared_with_observed"
+    if criteria:
+        if not criteria_description or not set(criteria) <= set(errors):
+            raise ValueError("Document criteria and supply every specified metric")
+        if not all(math.isfinite(v) and v >= 0 for v in criteria.values()):
+            raise ValueError("Criteria must be finite nonnegative absolute error bounds")
+        if all(abs(errors[k]) <= bound for k, bound in criteria.items()):
+            status = "meets_stated_benchmark_criteria"
     return ValidationReport(
-        status="validated_against_observed" if provenance.observed else "synthetic_benchmark",
-        provenance=asdict(provenance),
-        metric_errors={name: simulated[name] - observed[name] for name in overlap},
-        note="Signed error is simulated minus comparison value.",
+        status,
+        source,
+        errors,
+        criteria_description or "Signed errors; no acceptance criterion asserted.",
     )

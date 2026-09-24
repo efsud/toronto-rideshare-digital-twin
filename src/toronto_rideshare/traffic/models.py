@@ -29,6 +29,8 @@ EDGE_MAP_COLUMNS: tuple[str, ...] = (
     "key",
     "match_distance_m",
     "highway",
+    "ambiguous_match",
+    "direction_confidence",
 )
 
 

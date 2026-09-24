@@ -72,7 +72,9 @@ def test_apply_travel_times_sets_travel_time_t_attribute() -> None:
     graph = make_routing_graph()
     profile = make_profile()
 
-    apply_travel_times(graph, profile, "08:30")
+    original = graph
+    graph = apply_travel_times(graph, profile, "08:30")
+    assert "travel_time_t" not in original.edges[1, 2, 0]
 
     assert graph.edges[1, 2, 0]["travel_time_t"] == 180.0
     assert graph.edges[1, 3, 0]["travel_time_t"] == 60.0

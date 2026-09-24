@@ -204,12 +204,15 @@ def test_batch_assignment_improves_pickup_and_is_deterministic() -> None:
 
     fallback = batch_assign(trips, drivers, 0.0, use_ortools=False)
     assert fallback.backend == "deterministic-greedy"
-    assert fallback.pairs == batch_assign(
-        list(reversed(trips)),
-        list(reversed(drivers)),
-        0.0,
-        use_ortools=False,
-    ).pairs
+    assert (
+        fallback.pairs
+        == batch_assign(
+            list(reversed(trips)),
+            list(reversed(drivers)),
+            0.0,
+            use_ortools=False,
+        ).pairs
+    )
 
 
 def test_batch_assignment_reports_ortools_import_fallback(monkeypatch) -> None:

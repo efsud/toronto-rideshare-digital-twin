@@ -9,12 +9,8 @@ def _tiny_graph() -> nx.MultiDiGraph:
     graph = nx.MultiDiGraph()
     graph.add_node(1, y=43.65, x=-79.38)
     graph.add_node(2, y=43.651, x=-79.379)
-    graph.add_edge(
-        1, 2, 0, length=500.0, travel_time=60.0, highway="residential"
-    )
-    graph.add_edge(
-        2, 1, 0, length=500.0, travel_time=60.0, highway="residential"
-    )
+    graph.add_edge(1, 2, 0, length=500.0, travel_time=60.0, highway="residential")
+    graph.add_edge(2, 1, 0, length=500.0, travel_time=60.0, highway="residential")
     graph.graph["crs"] = "EPSG:4326"
     return graph
 

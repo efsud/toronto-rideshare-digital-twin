@@ -10,6 +10,12 @@ import yaml
 
 def load_config(path: str | Path = "configs/morning_peak.yaml") -> dict[str, Any]:
     """Load a project YAML config file."""
+    import copy
+
+    if hasattr(path, "as_dict"):
+        return path.as_dict()
+    if isinstance(path, dict):
+        return copy.deepcopy(path)
     config_path = Path(path)
     if not config_path.exists():
         raise FileNotFoundError(f"Config file not found: {config_path}")

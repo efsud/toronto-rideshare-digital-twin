@@ -1,47 +1,46 @@
-import os
 from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 
-from toronto_rideshare.policies.registry import PolicyId
-
-os.environ["TORONTO_RIDESHARE_DISABLE_ROUTING"] = "1"
-
-APP = Path(__file__).parents[1] / "dashboard" / "app.py"
+APP = Path(__file__).parents[1] / "dashboard/app.py"
 
 
-def test_dashboard_starts_and_steps_same_engine() -> None:
-    at = AppTest.from_file(str(APP), default_timeout=20).run()
-    assert not at.exception
-    assert at.title[0].value == "Toronto marketplace control room"
-    initial_engine = at.session_state["engine"]
-
-    at.button(key="step").click().run()
-    assert not at.exception
-    assert at.session_state["engine"] is initial_engine
-    assert at.session_state["engine"].clock.current_time_min == 425.0
-
-
-def test_dashboard_reset_control() -> None:
-    at = AppTest.from_file(str(APP), default_timeout=20).run()
-    at.button(key="step").click().run()
-    at.button(key="reset").click().run()
-    assert not at.exception
-    assert at.session_state["engine"].clock.current_time_min == 420.0
-
-
-def test_dashboard_shows_fallback_map_and_policy_comparison() -> None:
+def test_dashboard_starts_steps_resets_and_has_map():
     at = AppTest.from_file(str(APP), default_timeout=30).run()
     assert not at.exception
-    assert any("haversine fallback" in warning.value for warning in at.warning)
+    assert at.title[0].value == "Explore a city. Question a policy."
+    engine = at.session_state["engine"]
     assert at.get("deck_gl_json_chart")
-
-    at.multiselect(key="comparison_policies").set_value([PolicyId.P0])
-    at.number_input(key="comparison_replicates").set_value(1)
-    submit = next(button for button in at.button if button.label == "Run policy comparison")
-    submit.click().run(timeout=30)
-
+    at.button(key="step").click().run()
     assert not at.exception
-    assert "comparison" in at.session_state
-    assert at.selectbox(key="comparison_metric")
+    assert at.session_state["engine"] is engine
+    assert engine.last_snapshot["processed_time_min"] == 425
+    at.button(key="reset").click().run()
+    assert engine.clock.current_time_min == 420
+
+
+def test_comparison_uses_applied_scenario():
+    at = AppTest.from_file(str(APP), default_timeout=30).run()
+    at.radio(key="workspace_view").set_value("Compare policies").run()
+    at.multiselect(key="comparison_policies").set_value(["P0_fixed_baseline"])
+    at.number_input(key="comparison_replicates").set_value(1)
+    next(b for b in at.button if b.label == "Run policy comparison").click().run()
+    assert not at.exception
+    result = at.session_state["comparison"]
+    assert result["replicates"][0]["manifest"]["scenario"] == at.session_state["scenario"]
+    assert at.dataframe
+
+
+def test_setup_and_model_pages():
+    at = AppTest.from_file(str(APP), default_timeout=30).run()
+    at.radio(key="workspace_view").set_value("Set up a scenario").run()
+    assert not at.exception
+    fleet = next(x for x in at.number_input if x.label == "Drivers in the fleet")
+    fleet.set_value(7).run()
+    assert at.session_state["scenario"]["simulation"]["fleet_size"] == 20
+    next(b for b in at.button if b.label == "Apply scenario and start fresh").click().run()
+    assert not at.exception
+    assert len(at.session_state["engine"].drivers) == 7
+    at.radio(key="workspace_view").set_value("Understand the model").run()
+    assert not at.exception
     assert at.dataframe

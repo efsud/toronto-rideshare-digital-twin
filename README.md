@@ -1,3 +1,18 @@
+# Toronto Ride-Hailing Research Platform
+
+A guided Python/Streamlit research prototype for comparing matching, pricing, driver bonuses and repositioning on Toronto geography. **v0.5 uses synthetic demand and assumed behavior; it is not a calibrated Toronto marketplace forecast.**
+
+Start with [the model handbook](docs/MODEL_HANDBOOK.md), [reproduction commands](docs/REPRODUCE.md), [public-data evaluation](docs/PUBLIC_DATA_REPORT.md) and [release readiness](docs/RELEASE_READINESS.md). The handbook explains every policy, parameter, map mark and metric. The dashboard contains four views: setup, simulation, comparison and model understanding.
+
+```sh
+pip install -e '.[all]'
+streamlit run dashboard/app.py
+```
+
+Default demo runs offline. Network research requires an OSM graph and excludes unreachable assignments. Apply scenario changes explicitly to start a fresh run. Use 30 paired seeds for research comparisons; three are only a preview.
+
+<details><summary>Earlier project documentation (historical v0.4 context)</summary>
+
 # Toronto Ride-Hailing Marketplace Digital Twin
 
 A research-grade simulator for traffic-aware rider–driver matching, two-sided pricing,
@@ -216,3 +231,5 @@ Road-network and basemap data from OpenStreetMap. Toronto coverage derives from
 City of Toronto Open Data, “City Wards”:
 https://open.toronto.ca/dataset/city-wards/. Full source and derivation metadata
 are persisted in `src/toronto_rideshare/zones/data/toronto_boundary.geojson`.
+
+</details>

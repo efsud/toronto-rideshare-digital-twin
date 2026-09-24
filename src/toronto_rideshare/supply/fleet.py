@@ -5,7 +5,8 @@ from __future__ import annotations
 import numpy as np
 
 from toronto_rideshare.supply.models import Driver
-from toronto_rideshare.zones import lat_lon_to_zone, zone_center
+from toronto_rideshare.zones import lat_lon_to_zone
+from toronto_rideshare.zones.sampling import sample_location
 
 
 def initialize_fleet(
@@ -22,9 +23,7 @@ def initialize_fleet(
 
     for i in range(fleet_size):
         zone = str(rng.choice(zone_ids))
-        lat, lon = zone_center(zone)
-        lat += float(rng.normal(0, 0.001))
-        lon += float(rng.normal(0, 0.001))
+        lat, lon = sample_location(zone, rng)
         drivers.append(
             Driver(
                 driver_id=f"D{i:04d}",

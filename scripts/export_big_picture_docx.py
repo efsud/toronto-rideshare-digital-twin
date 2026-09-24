@@ -222,7 +222,7 @@ def build_document() -> Document:
         "\n".join(
             [
                 "source .venv/bin/activate",
-                "pip install -e \".[dev,visualization,optimization]\"",
+                'pip install -e ".[dev,visualization,optimization]"',
                 "",
                 "# Network + traffic",
                 "python examples/download_toronto_network.py",

@@ -179,10 +179,7 @@ def optimize_zone_pricing(
             ),
             expected_subsidy_cad=(
                 max(1.0, float(zone_imbalance[zone].get("demand", 1.0)))
-                * (
-                    discount_vars[zone].solution_value()
-                    + bonus_vars[zone].solution_value()
-                )
+                * (discount_vars[zone].solution_value() + bonus_vars[zone].solution_value())
             ),
             expected_incremental_revenue_cad=(
                 max(1.0, float(zone_imbalance[zone].get("demand", 1.0)))

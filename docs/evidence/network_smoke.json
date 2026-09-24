@@ -1,0 +1,196 @@
+{
+  "seconds": 19.58280191605445,
+  "result": {
+    "timestamp": "2026-09-24T20:00:19.202808+00:00",
+    "manifest": {
+      "schema_version": 2,
+      "model_version": "0.5.0",
+      "commit": "b106fbc50ebdebf2095e2cbb49535707de93a7d0",
+      "working_tree_dirty": true,
+      "scenario": {
+        "project": {
+          "random_seed": 42,
+          "model_version": "0.5.0"
+        },
+        "simulation": {
+          "start_time": "07:00",
+          "end_time": "10:00",
+          "decision_interval_minutes": 5.0,
+          "fleet_size": 5,
+          "base_trip_count": 5,
+          "demand_multiplier": 1.0,
+          "rider_max_wait_minutes": 15.0
+        },
+        "network": {
+          "mode": "network_research",
+          "graph_path": "data/processed/toronto_drive.graphml",
+          "traffic_profile_path": "data/processed/observed_training_profile.parquet",
+          "use_time_dependent_routing": true
+        },
+        "behavior": {
+          "profile": "shared",
+          "additional_bonus_response": false
+        },
+        "policy": {
+          "name": "P0_fixed_baseline",
+          "matching_strategy": "policy_default",
+          "max_rider_premium_cad": 5.0,
+          "max_driver_bonus_cad": 12.0,
+          "subsidy_budget_cad": 500.0,
+          "fairness_bound_cad": 3.0,
+          "rider_price_elasticity": -0.3,
+          "driver_bonus_elasticity": 0.4,
+          "reposition_acceptance": 0.7,
+          "acceptance_intercept": 0.5,
+          "acceptance_earnings_per_cad": 0.1,
+          "acceptance_pickup_minutes_penalty": 0.18,
+          "predicted_demand_response_per_cad": 0.06,
+          "predicted_supply_response_per_cad": 0.04
+        }
+      },
+      "source_checksums": {
+        "graph_path": "c457c7463e484e20f66b757a8e8882a1c9e9aa140faf6652115622f991f7fbc6",
+        "traffic_profile_path": "bf921fd98e124b1a20517621d85d9670786cb975a0edf951e686a7b791ae2788"
+      },
+      "random_streams": {
+        "demand": 3299503807182972670,
+        "fleet": 12756309315864463912,
+        "behavior": 8689078872892211521,
+        "network_demand": 12498187691209932451,
+        "network_fleet": 9978106933656276993
+      },
+      "matching_backend": "greedy",
+      "pricing_decisions": [],
+      "population_sampling": "uniform eligible road nodes",
+      "routing_mode_counts": {
+        "time-dependent network": 36
+      },
+      "metric_definitions": {
+        "service_rate": "Completed by horizon / arrived potential requests",
+        "mean_wait_min": "Request-to-pickup minutes, riders actually collected only",
+        "utilization_rate": "Elapsed pickup + occupied minutes / fleet minutes; excludes repositioning",
+        "total_driver_earnings_cad": "Gross earnings; excludes vehicle expenses",
+        "platform_net_revenue_cad": "Rider payments minus gross driver earnings; before operating costs",
+        "total_pickup_time_min": "Planned pickup duration for accepted assignments",
+        "total_trip_time_min": "Planned occupied duration for accepted assignments",
+        "total_reposition_time_min": "Planned reposition duration",
+        "unserved_trips": "Cancelled + price declined + still waiting at horizon"
+      },
+      "data_status": {
+        "demand": "synthetic uniform",
+        "behavior": "assumed",
+        "traffic": "profile supplied; inspect provenance",
+        "empirical_validation": "not_evaluated"
+      }
+    },
+    "config_path": "applied scenario",
+    "policy_id": "P0_fixed_baseline",
+    "random_seed": 42,
+    "simulation_start_time_min": 420.0,
+    "simulation_end_time_min": 600.0,
+    "generated_trip_count": 5,
+    "metrics": {
+      "picked_up_trips": 4,
+      "waiting_trips": 0,
+      "elapsed_busy_min": 85.91085623852337,
+      "elapsed_reposition_min": 0.0,
+      "realized_wait_total_min": 61.863331224404305,
+      "realized_pickup_total_min": 47.22651204373369,
+      "realized_trip_total_min": 38.684344194789674,
+      "completed_trips": 4,
+      "unserved_trips": 1,
+      "total_rider_payment_cad": 57.64344084142136,
+      "total_driver_earnings_cad": 43.23258063106603,
+      "platform_net_revenue_cad": 14.410860210355331,
+      "rejected_offers": 14,
+      "accepted_offers": 4,
+      "total_offers": 18,
+      "subsidy_spend_cad": 0.0,
+      "optimization_steps": 0,
+      "cancelled_trips": 1,
+      "rider_price_declines": 0,
+      "unserved_arrived_trips": 1,
+      "not_yet_released_trips": 0,
+      "in_progress_trips": 0,
+      "assigned_trips": 4,
+      "total_queue_wait_min": 14.636819180670614,
+      "total_pickup_time_min": 47.22651204373363,
+      "total_trip_time_min": 38.68434419478973,
+      "total_reposition_time_min": 0.0,
+      "mean_wait_min": 15.465832806101076,
+      "mean_pickup_time_min": 11.806628010933423,
+      "mean_trip_time_min": 9.671086048697418,
+      "acceptance_rate": 0.2222222222222222,
+      "service_rate": 0.8,
+      "utilization_rate": 0.09545650693169262,
+      "routing_mode_counts": {
+        "time-dependent network": 36
+      }
+    },
+    "mean_wait_min": 15.465832806101076,
+    "p50_wait_min": 16.64632872018558,
+    "p95_wait_min": 17.733291259607313,
+    "reposition_events": 0,
+    "used_network_routing": true,
+    "routing_mode": "time-dependent network",
+    "routing_fallback_reason": null,
+    "matching_strategy": "greedy",
+    "matching_backend": "greedy",
+    "routing_mode_share": {
+      "time-dependent network": 1.0
+    },
+    "zone_state": {
+      "882b9bc703fffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bc521fffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bd455fffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bcecdfffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bc1abfffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      }
+    },
+    "policy_objective": "serve demand with minimum pickup time",
+    "policy_strategy": "fixed fares and deterministic nearest-driver offers",
+    "policy_assumptions": {
+      "behavior_enabled": true,
+      "rider_price_elasticity": -0.3,
+      "driver_bonus_elasticity": 0.4,
+      "reposition_acceptance": 0.7,
+      "offer_acceptance": {
+        "intercept": 0.5,
+        "earnings_per_cad": 0.1,
+        "pickup_minutes_penalty": 0.18
+      },
+      "rider_max_wait_minutes": 15.0,
+      "predicted_demand_response_per_cad": 0.06,
+      "predicted_supply_response_per_cad": 0.04
+    }
+  }
+}

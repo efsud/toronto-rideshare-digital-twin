@@ -1,35 +1,37 @@
-"""Simple driver repositioning toward undersupplied zones."""
+"""Capacity-reserving deterministic repositioning."""
 
 from __future__ import annotations
 
-from toronto_rideshare.supply.models import Driver, DriverStatus
+from toronto_rideshare.supply.models import DriverStatus
 
 
-def suggest_reposition_targets(
-    drivers: list[Driver],
-    zone_imbalance: dict[str, dict[str, float]],
-    *,
-    top_k: int = 3,
-) -> dict[str, str]:
-    """Assign idle drivers in oversupplied zones to most undersupplied zones."""
-    undersupplied = sorted(
+def suggest_reposition_targets(drivers, zone_imbalance, *, top_k=3, travel_cost=None):
+    shortages = sorted(
         (
-            item
-            for item in zone_imbalance.items()
-            if float(item[1]["imbalance"]) > 0.0
+            (zone, int(stats["imbalance"]))
+            for zone, stats in zone_imbalance.items()
+            if stats["imbalance"] > 0
         ),
-        key=lambda item: item[1]["imbalance"],
-        reverse=True,
+        key=lambda row: (-row[1], row[0]),
     )[:top_k]
-    if not undersupplied:
-        return {}
-
-    target_zone = undersupplied[0][0]
-    assignments: dict[str, str] = {}
-    for driver in drivers:
-        if driver.status != DriverStatus.IDLE:
-            continue
-        info = zone_imbalance.get(driver.zone, {"imbalance": 0.0})
-        if info["imbalance"] < 0:
-            assignments[driver.driver_id] = target_zone
-    return assignments
+    surplus = {zone: max(0, int(-stats["imbalance"])) for zone, stats in zone_imbalance.items()}
+    assigned = {}
+    for target, capacity in shortages:
+        candidates = []
+        for driver in drivers:
+            if driver.status != DriverStatus.IDLE or driver.driver_id in assigned:
+                continue
+            if surplus.get(driver.zone, 0) <= 0:
+                continue
+            cost = travel_cost(driver, target) if travel_cost else 0.0
+            if cost is not None:
+                candidates.append((cost, driver.driver_id, driver))
+        for _, driver_id, driver in sorted(candidates):
+            if capacity <= 0:
+                break
+            if surplus.get(driver.zone, 0) <= 0:
+                continue
+            assigned[driver_id] = target
+            surplus[driver.zone] -= 1
+            capacity -= 1
+    return assigned

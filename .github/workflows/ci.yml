@@ -21,8 +21,15 @@ jobs:
       - name: Ruff
         run: ruff check src tests examples scripts dashboard
       - name: Pytest
-        run: pytest
+        run: pytest --cov=toronto_rideshare --cov-report=xml --junitxml=results/tests.xml
       - name: Verify required runtime paths
         run: |
           pytest tests/test_dashboard_app.py
           pytest tests/test_optimization.py tests/test_matching_routing.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: software-validation
+          path: |
+            results/tests.xml
+            coverage.xml

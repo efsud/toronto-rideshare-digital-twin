@@ -42,6 +42,7 @@ def apply_travel_times(
     departure_time: str,
 ) -> nx.MultiDiGraph:
     """Attach ``travel_time_t`` edge weights for the requested departure bucket."""
+    graph = graph.copy()
     bucket = departure_time_to_bucket(departure_time, profile.time_buckets).label
     bucket_stats = profile.edge_stats[profile.edge_stats["time_bucket"] == bucket]
     lookup = {

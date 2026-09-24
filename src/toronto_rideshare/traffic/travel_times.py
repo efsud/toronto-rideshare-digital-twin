@@ -96,6 +96,15 @@ def _fill_missing_speeds(
     if pd.isna(citywide_median):
         citywide_median = direct["free_flow_speed_kph"].median()
 
+    direct["cost_source"] = "direct_observation"
+    direct.loc[direct["observed_speed_kph"].isna(), "cost_source"] = "citywide_imputation"
+    direct.loc[
+        direct["observed_speed_kph"].isna() & direct["highway_median_speed_kph"].notna(),
+        "cost_source",
+    ] = "highway_imputation"
+    if bucket_agg.empty:
+        direct["cost_source"] = "free_flow"
+        direct["observed_speed_kph"] = direct["free_flow_speed_kph"]
     direct["observed_speed_kph"] = direct["observed_speed_kph"].fillna(
         direct["highway_median_speed_kph"]
     )
@@ -146,7 +155,7 @@ def build_traffic_profile(
         profile_parts.append(filled)
 
     profile_frame = pd.concat(profile_parts, ignore_index=True)
-    profile_frame = profile_frame[list(PROFILE_COLUMNS)]
+    profile_frame = profile_frame[[*PROFILE_COLUMNS, "cost_source"]]
     return TrafficProfile(edge_stats=profile_frame, time_buckets=time_buckets), mapping
 
 

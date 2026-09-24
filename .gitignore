@@ -41,3 +41,5 @@ figures/*
 cache/
 *.graphml
 *.gpkg
+
+coverage.xml

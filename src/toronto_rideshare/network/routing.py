@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 import networkx as nx
@@ -17,6 +17,8 @@ class RouteResult:
     destination_node: int
     distance_km: float
     travel_time_min: float
+    edge_keys: list[tuple[int, int, int]] = field(default_factory=list)
+    path: list[list[float]] = field(default_factory=list)
 
 
 def _ox() -> Any:
@@ -67,6 +69,8 @@ def summarize_route(
             travel_time_min=0.0,
         )
 
+    edge_keys = []
+    path = []
     distance_m = 0.0
     travel_time_s = 0.0
     for u, v in zip(route_nodes[:-1], route_nodes[1:], strict=True):
@@ -75,6 +79,26 @@ def summarize_route(
             raise KeyError(f"Edge {u!r}->{v!r} is missing required 'length'.")
         if weight not in edge:
             raise KeyError(f"Edge {u!r}->{v!r} is missing required weight '{weight}'.")
+        key = min(graph[u][v], key=lambda k: (float(graph[u][v][k][weight]), k))
+        edge_keys.append((int(u), int(v), int(key)))
+        geometry = edge.get("geometry")
+        coords = (
+            list(geometry.coords)
+            if geometry is not None
+            else [
+                (graph.nodes[u].get("x", 0), graph.nodes[u].get("y", 0)),
+                (graph.nodes[v].get("x", 0), graph.nodes[v].get("y", 0)),
+            ]
+        )
+        origin = graph.nodes[u]
+        if geometry is not None and "x" in origin:
+
+            def distance(point, origin=origin):
+                return (point[0] - origin["x"]) ** 2 + (point[1] - origin["y"]) ** 2
+
+            if distance(coords[-1]) < distance(coords[0]):
+                coords.reverse()
+        path.extend([list(c) for c in (coords if not path else coords[1:])])
         distance_m += float(edge["length"])
         travel_time_s += float(edge[weight])
 
@@ -84,6 +108,8 @@ def summarize_route(
         destination_node=int(route_nodes[-1]),
         distance_km=distance_m / 1000.0,
         travel_time_min=travel_time_s / 60.0,
+        edge_keys=edge_keys,
+        path=path,
     )
 
 
@@ -113,9 +139,7 @@ def shortest_time_route(
     destination_lat, destination_lon = destination_latlon
 
     origin_node = int(ox.distance.nearest_nodes(graph, X=origin_lon, Y=origin_lat))
-    destination_node = int(
-        ox.distance.nearest_nodes(graph, X=destination_lon, Y=destination_lat)
-    )
+    destination_node = int(ox.distance.nearest_nodes(graph, X=destination_lon, Y=destination_lat))
 
     route = ox.routing.shortest_path(
         graph,

@@ -5,7 +5,8 @@ from __future__ import annotations
 import numpy as np
 
 from toronto_rideshare.demand.models import TripRequest
-from toronto_rideshare.zones import lat_lon_to_zone, zone_center
+from toronto_rideshare.zones import lat_lon_to_zone
+from toronto_rideshare.zones.sampling import sample_location
 
 
 def generate_trips(
@@ -14,6 +15,7 @@ def generate_trips(
     n_trips: int,
     start_time_min: float = 0.0,
     random_seed: int = 42,
+    end_time_min: float | None = None,
     demand_multiplier: float = 1.0,
 ) -> list[TripRequest]:
     """Generate demand; multiplier scales count, never the arrival window."""
@@ -26,14 +28,12 @@ def generate_trips(
     for i in range(scaled_count):
         origin_zone = str(rng.choice(zone_ids))
         dest_zone = str(rng.choice(zone_ids))
-        o_lat, o_lon = zone_center(origin_zone)
-        d_lat, d_lon = zone_center(dest_zone)
-        # jitter within cell
-        o_lat += float(rng.normal(0, 0.001))
-        o_lon += float(rng.normal(0, 0.001))
-        d_lat += float(rng.normal(0, 0.001))
-        d_lon += float(rng.normal(0, 0.001))
-        t_min = start_time_min + float(rng.uniform(0, 180))
+        o_lat, o_lon = sample_location(origin_zone, rng)
+        d_lat, d_lon = sample_location(dest_zone, rng)
+        end = start_time_min + 180 if end_time_min is None else end_time_min
+        if end < start_time_min:
+            raise ValueError("Demand end time precedes start")
+        t_min = float(rng.uniform(start_time_min, end))
         trips.append(
             TripRequest(
                 request_id=f"R{i:05d}",

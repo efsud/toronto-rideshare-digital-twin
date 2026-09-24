@@ -75,7 +75,6 @@ def normalize_toronto_open_data(frame: pd.DataFrame) -> pd.DataFrame:
                 normalized["datetime"] = pd.to_datetime(
                     frame[date_col].astype(str) + " " + frame[time_col].astype(str),
                     errors="coerce",
-                    utc=True,
                 )
                 break
 
@@ -157,11 +156,27 @@ def load_traffic_observations(path: str | Path) -> gpd.GeoDataFrame:
 def clean_observations(observations: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Drop invalid rows and restrict observations to the Toronto bounding box."""
     cleaned = observations.copy()
+    if "speed_kph" not in cleaned:
+        raise ValueError("Speed observations are required; volume is not a speed measurement")
+
+    def local_timestamp(value):
+        try:
+            ts = pd.Timestamp(value)
+            if ts.tzinfo is None:
+                return ts.tz_localize("America/Toronto", ambiguous="NaT", nonexistent="NaT")
+            return ts.tz_convert("America/Toronto")
+        except (ValueError, TypeError):
+            return pd.NaT
+
+    cleaned["datetime"] = pd.to_datetime(cleaned["datetime"].map(local_timestamp))
+    for column in ("speed_kph", "latitude", "longitude"):
+        cleaned[column] = pd.to_numeric(cleaned[column], errors="coerce")
+
     cleaned = cleaned.dropna(subset=["observation_id", "latitude", "longitude", "datetime"])
 
     if "speed_kph" in cleaned.columns:
         cleaned = cleaned.dropna(subset=["speed_kph"])
-        cleaned = cleaned[cleaned["speed_kph"] > 0]
+        cleaned = cleaned[cleaned["speed_kph"].between(0, float("inf"), inclusive="neither")]
 
     bounds = TORONTO_BOUNDS
     cleaned = cleaned[

@@ -1,0 +1,87 @@
+{
+  "status": "compared_with_observed",
+  "scope": "Held-out-site speed-bin midpoint comparisons; not trip-time calibration",
+  "split": {
+    "method": "80/20 deterministic site holdout; all dates/directions kept together",
+    "training_rows": 34032,
+    "test_rows": 8249,
+    "training_sites": 835,
+    "test_sites": 209,
+    "overlap_sites": []
+  },
+  "global_training_median": {
+    "n": 8249,
+    "mae_kph": 7.909379087333805,
+    "rmse_kph": 10.072431289859,
+    "bias_kph": -0.6537167259546927
+  },
+  "time_bucket_median": {
+    "n": 8249,
+    "mae_kph": 7.795977590586056,
+    "rmse_kph": 9.925615543785726,
+    "bias_kph": -0.5806491402120885
+  },
+  "free_flow": {
+    "n": 5531,
+    "mae_kph": 6.960843290466256,
+    "rmse_kph": 9.01240557309798,
+    "bias_kph": 2.09310041223076
+  },
+  "measurement_uncertainty": "Weighted bin midpoints; the 81\u2013160 km/h bin is particularly broad",
+  "acceptance_criteria": null,
+  "rider_demand_driver_behavior": "not_evaluated",
+  "qa": {
+    "input_rows": 50000,
+    "usable_rows": 42281,
+    "excluded_rows": 7719,
+    "measurement": "speed-bin midpoint",
+    "timezone": "America/Toronto"
+  },
+  "provenance": {
+    "source_url": "https://open.toronto.ca/dataset/traffic-volumes-midblock-vehicle-speed-volume-and-classification-counts/",
+    "evaluated_at": "2026-09-24T19:58:58.982222+00:00",
+    "license": "Open Government Licence \u2013 Toronto",
+    "input": "data/raw/midblock_speed_sample.csv",
+    "sha256": "a4bac315acf01fcc30c8cafeac480edc4272b6dc0edfc41a44e8b2f04dc6f17e",
+    "sampling": "Bounded first 50,000 raw records; not a representative city sample",
+    "graph_sha256": "c457c7463e484e20f66b757a8e8882a1c9e9aa140faf6652115622f991f7fbc6"
+  },
+  "mapping": {
+    "test_rows": 8249,
+    "mapped_rows": 5531,
+    "unambiguous_rows": 5531,
+    "maximum_distance_m": 50,
+    "direction": "directional candidates, ambiguous ties excluded"
+  },
+  "matched_cohort": {
+    "n": 5531,
+    "traffic_profile": {
+      "n": 5531,
+      "mae_kph": 6.791951742789143,
+      "rmse_kph": 8.87094498962606,
+      "bias_kph": 1.125323081717563
+    },
+    "time_bucket_median": {
+      "n": 5531,
+      "mae_kph": 7.569802736698655,
+      "rmse_kph": 9.698277275950439,
+      "bias_kph": -0.23127077595348014
+    },
+    "free_flow": {
+      "n": 5531,
+      "mae_kph": 6.960843290466256,
+      "rmse_kph": 9.01240557309798,
+      "bias_kph": 2.09310041223076
+    }
+  },
+  "training_profile": {
+    "rows": 292528,
+    "source_counts": {
+      "highway_imputation": 281598,
+      "citywide_imputation": 6732,
+      "direct_observation": 4198
+    },
+    "mapped_observations": 23284,
+    "sha256": "bf921fd98e124b1a20517621d85d9670786cb975a0edf951e686a7b791ae2788"
+  }
+}

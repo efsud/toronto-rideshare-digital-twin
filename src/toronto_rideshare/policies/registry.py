@@ -95,6 +95,7 @@ def zone_adjustments_from_imbalance(
     zone_imbalance: dict[str, dict[str, float]],
     settings: PolicySettings,
     policy_cfg: dict[str, Any],
+    diagnostics: dict | None = None,
 ) -> dict[str, tuple[float, float]]:
     """Compute per-zone rider adjustments and driver bonuses."""
     rider_cap = float(policy_cfg.get("max_rider_premium_cad", 5.0))
@@ -115,6 +116,12 @@ def zone_adjustments_from_imbalance(
                 policy_cfg.get("predicted_supply_response_per_cad", 0.04)
             ),
         )
+        if diagnostics is not None:
+            diagnostics.update(
+                backend=sorted({d.backend for d in decisions}),
+                objective="linear response proxy",
+                fallback=any(d.backend == "heuristic" for d in decisions),
+            )
         return {
             d.zone: (
                 d.rider_adjustment_cad if settings.use_rider_pricing else 0.0,
@@ -123,6 +130,8 @@ def zone_adjustments_from_imbalance(
             for d in decisions
         }
 
+    if diagnostics is not None:
+        diagnostics.update(backend=["imbalance_rules"], fallback=False)
     adjustments: dict[str, tuple[float, float]] = {}
     for zone, stats in zone_imbalance.items():
         imb = float(stats["imbalance"])

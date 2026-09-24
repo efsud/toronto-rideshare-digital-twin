@@ -138,10 +138,7 @@ def test_max_wait_cancellation_emits_event() -> None:
 def test_p7_behavior_changes_seeded_rider_outcomes() -> None:
     zone = toronto_zone_cells()[100]
     lat, lon = zone_center(zone)
-    trips = [
-        TripRequest(f"R{i}", 0.0, lat, lon, lat, lon, zone, zone)
-        for i in range(2)
-    ]
+    trips = [TripRequest(f"R{i}", 0.0, lat, lon, lat, lon, zone, zone) for i in range(2)]
     engine = SimulationEngine(
         clock=SimulationClock(end_time_min=0.0),
         drivers=[],
@@ -189,14 +186,8 @@ def test_driver_bonus_response_materially_changes_seeded_outcome() -> None:
 def test_actual_subsidy_spend_never_exceeds_total_budget() -> None:
     zone = toronto_zone_cells()[100]
     lat, lon = zone_center(zone)
-    trips = [
-        TripRequest(f"R{i}", 0.0, lat, lon, lat, lon, zone, zone)
-        for i in range(2)
-    ]
-    drivers = [
-        Driver(f"D{i}", lat, lon, "oversupplied")
-        for i in range(2)
-    ]
+    trips = [TripRequest(f"R{i}", 0.0, lat, lon, lat, lon, zone, zone) for i in range(2)]
+    drivers = [Driver(f"D{i}", lat, lon, "oversupplied") for i in range(2)]
     engine = SimulationEngine(
         clock=SimulationClock(end_time_min=10.0, step_min=1.0),
         drivers=drivers,
@@ -242,7 +233,7 @@ def test_seeded_repositioning_consumes_time_before_location_change() -> None:
 
     first = engine.step()
 
-    assert first["reposition_events"] == 2
+    assert first["reposition_events"] == 1
     assert engine.metrics.total_reposition_time_min > 0.0
-    assert all(driver.status == DriverStatus.REPOSITIONING for driver in engine.drivers)
+    assert sum(driver.status == DriverStatus.REPOSITIONING for driver in engine.drivers) == 1
     assert all((driver.lat, driver.lon) == supply for driver in engine.drivers)

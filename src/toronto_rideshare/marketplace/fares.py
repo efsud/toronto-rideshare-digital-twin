@@ -29,6 +29,7 @@ def compute_fare(
 ) -> FareBreakdown:
     """Independent two-sided pricing: P_r = P0 + a, E_r = E0 + b."""
     baseline = BASE_FARE_CAD + PER_KM_CAD * distance_km + PER_MIN_CAD * duration_min
+    rider_adjustment_cad = max(-baseline, rider_adjustment_cad)
     rider_payment = baseline + rider_adjustment_cad
     driver_earnings = baseline * DRIVER_SHARE + driver_bonus_cad
     platform = rider_payment - driver_earnings
