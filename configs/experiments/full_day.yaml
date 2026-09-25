@@ -1,0 +1,19 @@
+project:
+  random_seed: 42
+simulation:
+  start_time: "00:00"
+  end_time: "24:00"
+  decision_interval_minutes: 5
+  fleet_size: 60
+  base_trip_count: 1200
+  demand_multiplier: 1.0
+  demand_profile: synthetic_daily
+  request_probability: 0.8
+  rider_max_wait_minutes: 15
+network:
+  mode: demo
+behavior:
+  profile: shared
+  marketplace_model: driver_choice
+policy:
+  name: P0_fixed_baseline

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -66,6 +69,8 @@ def build_drive_network(
         fallback=fallback_speed_kph,
     )
     graph = ox.routing.add_edge_travel_times(graph)
+    graph.graph["downloaded_at"] = datetime.now(UTC).isoformat()
+    graph.graph["source"] = "OpenStreetMap via OSMnx"
     return graph
 
 
@@ -75,6 +80,22 @@ def save_graph(graph: nx.MultiDiGraph, path: str | Path) -> Path:
     output_path = Path(path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     ox.io.save_graphml(graph, filepath=output_path)
+    output_path.with_suffix(".metadata.json").write_text(
+        json.dumps(
+            {
+                "source": graph.graph.get("source", "provided graph"),
+                "downloaded_at": graph.graph.get("downloaded_at"),
+                "saved_at": datetime.now(UTC).isoformat(),
+                "nodes": len(graph),
+                "directed_edges": graph.number_of_edges(),
+                "weak_components": nx.number_weakly_connected_components(graph),
+                "strong_components": nx.number_strongly_connected_components(graph),
+                "sha256": hashlib.sha256(output_path.read_bytes()).hexdigest(),
+                "attribution": "© OpenStreetMap contributors",
+            },
+            indent=2,
+        )
+    )
     return output_path.resolve()
 
 

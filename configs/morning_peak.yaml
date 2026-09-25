@@ -1,25 +1,29 @@
+# Historical scenario: explicit legacy offer model.
 project:
-  city: "Toronto, Ontario, Canada"
+  city: Toronto, Ontario, Canada
   random_seed: 42
-
 network:
-  place: "Toronto, Ontario, Canada"
-  network_type: "drive"
+  place: Toronto, Ontario, Canada
+  network_type: drive
   simplify: true
   retain_all: false
   fallback_speed_kph: 35.0
-  graph_path: "data/processed/toronto_drive.graphml"
-
+  graph_path: data/processed/toronto_drive.graphml
 simulation:
-  start_time: "07:00"
-  end_time: "10:00"
+  start_time: 07:00
+  end_time: '10:00'
   decision_interval_minutes: 5
   fleet_size: 750
   demand_multiplier: 1.25
-
+  demand_profile: uniform
+  request_probability: 1.0
 traffic:
-  scenario: "morning_peak"
+  scenario: morning_peak
   use_observed_speed_data: false
-
+  observations_path: data/synthetic/traffic_observations_sample.csv
+  profile_path: data/processed/edge_traffic_profile.parquet
+  edge_map_path: data/processed/traffic_edge_map.parquet
 policy:
-  name: "fixed_baseline"
+  name: fixed_baseline
+behavior:
+  marketplace_model: legacy_offers
