@@ -12,7 +12,7 @@ from typing import Any
 from toronto_rideshare.config import load_config
 
 DEFAULTS = {
-    "project": {"random_seed": 42, "model_version": "0.5.0"},
+    "project": {"random_seed": 42, "model_version": "0.6.0.dev0"},
     "simulation": {
         "start_time": "07:00",
         "end_time": "10:00",
@@ -20,6 +20,8 @@ DEFAULTS = {
         "fleet_size": 20,
         "base_trip_count": 20,
         "demand_multiplier": 1.0,
+        "demand_profile": "uniform",
+        "request_probability": 1.0,
         "rider_max_wait_minutes": 15.0,
     },
     "network": {
@@ -51,11 +53,11 @@ DEFAULTS = {
 def time_minutes(value: str) -> float:
     try:
         hour, minute = map(int, value.split(":"))
-        if not (0 <= hour <= 23 and 0 <= minute <= 59):
+        if not ((0 <= hour <= 23 and 0 <= minute <= 59) or (hour == 24 and minute == 0)):
             raise ValueError
         return float(hour * 60 + minute)
     except (ValueError, AttributeError) as exc:
-        raise ValueError("Times must use HH:MM within one calendar day") from exc
+        raise ValueError("Times must use HH:MM within one day (24:00 allowed at the end)") from exc
 
 
 def stream_seed(seed: int, stream: str) -> int:
@@ -103,6 +105,12 @@ class ScenarioConfig:
             raise ValueError("random_seed must be a nonnegative integer")
         if sim["decision_interval_minutes"] <= 0 or sim["rider_max_wait_minutes"] <= 0:
             raise ValueError("Decision interval and queue wait must be positive")
+        if time_minutes(sim["start_time"]) >= 1440:
+            raise ValueError("Start time must precede 24:00")
+        if sim["demand_profile"] not in ("uniform", "synthetic_daily"):
+            raise ValueError("Unknown demand profile")
+        if not 0 <= sim["request_probability"] <= 1:
+            raise ValueError("Request probability must be in [0,1]")
         if sim["demand_multiplier"] < 0:
             raise ValueError("Demand multiplier must be nonnegative")
         if not 0 <= policy["reposition_acceptance"] <= 1:

@@ -47,7 +47,7 @@ def run_manifest(config, engine):
     seed = config["project"]["random_seed"]
     return {
         "schema_version": 2,
-        "model_version": "0.5.0",
+        "model_version": "0.6.0.dev0",
         "commit": git.stdout.strip() or None,
         "working_tree_dirty": bool(status.stdout.strip()),
         "scenario": config,
@@ -66,14 +66,20 @@ def run_manifest(config, engine):
             e["diagnostics"] for e in engine.events if e["type"] == "policy_decision"
         ],
         "population_sampling": (
-            "uniform eligible road nodes"
+            "weighted eligible road nodes"
+            if config["simulation"]["demand_profile"] == "synthetic_daily"
+            and engine.routing
+            and engine.routing.strict
+            else "weighted clipped H3 cells"
+            if config["simulation"]["demand_profile"] == "synthetic_daily"
+            else "uniform eligible road nodes"
             if engine.routing and engine.routing.strict
             else "uniform clipped H3 cells"
         ),
         "routing_mode_counts": engine.metrics.routing_mode_counts,
         "metric_definitions": METRIC_DEFINITIONS,
         "data_status": {
-            "demand": "synthetic uniform",
+            "demand": "synthetic " + config["simulation"]["demand_profile"],
             "behavior": "assumed",
             "traffic": "profile supplied; inspect provenance"
             if engine.routing and engine.routing.profile

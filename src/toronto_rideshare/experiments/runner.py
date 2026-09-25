@@ -92,6 +92,8 @@ def create_engine(
         end_time_min=time_minutes(sim["end_time"]),
         random_seed=seed if legacy else stream_seed(seed, "demand"),
         demand_multiplier=sim["demand_multiplier"],
+        demand_profile=sim["demand_profile"],
+        request_probability=sim["request_probability"],
     )
     drivers = initialize_fleet(
         zones,
@@ -114,10 +116,19 @@ def create_engine(
         from dataclasses import replace
 
         rng = np.random.default_rng(stream_seed(seed, "network_demand"))
+        from toronto_rideshare.demand.profiles import location_weights, region_for_location
+
+        regions = [region_for_location(lat, lon) for _, lat, lon in eligible]
         sampled = []
         for trip in trips:
-            _, lat, lon = eligible[int(rng.integers(len(eligible)))]
-            _, dlat, dlon = eligible[int(rng.integers(len(eligible)))]
+            if sim["demand_profile"] == "synthetic_daily":
+                origin_weights = location_weights(regions, trip.request_time_min)
+                dest_weights = location_weights(regions, trip.request_time_min, destination=True)
+                _, lat, lon = eligible[int(rng.choice(len(eligible), p=origin_weights))]
+                _, dlat, dlon = eligible[int(rng.choice(len(eligible), p=dest_weights))]
+            else:
+                _, lat, lon = eligible[int(rng.integers(len(eligible)))]
+                _, dlat, dlon = eligible[int(rng.integers(len(eligible)))]
             sampled.append(
                 replace(
                     trip,

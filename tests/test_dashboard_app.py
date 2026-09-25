@@ -44,3 +44,16 @@ def test_setup_and_model_pages():
     at.radio(key="workspace_view").set_value("Understand the model").run()
     assert not at.exception
     assert at.dataframe
+
+
+def test_full_day_preset_and_run_control():
+    at = AppTest.from_file(str(APP), default_timeout=30).run()
+    at.radio(key="workspace_view").set_value("Set up a scenario").run()
+    next(b for b in at.button if b.label == "Load full-day adaptive-demand scenario").click().run()
+    assert not at.exception
+    assert at.session_state["scenario"]["simulation"]["end_time"] == "24:00"
+    at.radio(key="workspace_view").set_value("Explore the simulation").run()
+    next(b for b in at.button if b.label == "Run to end of day / scenario").click().run()
+    assert not at.exception
+    assert at.session_state["engine"].finished
+    assert at.session_state["engine"].last_snapshot["processed_time_min"] == 1440

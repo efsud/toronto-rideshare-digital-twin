@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "toronto-rideshare-digital-twin"
-version = "0.5.0"
+version = "0.6.0.dev0"
 description = "Traffic-aware Toronto ride-hailing marketplace simulator and policy testbed."
 readme = "README.md"
 requires-python = ">=3.11,<3.15"

@@ -34,6 +34,12 @@ def clock_label(minutes):
 def setup_view():
     st.subheader("Set up a scenario")
     st.caption("Change one assumption at a time. Applying changes creates a fresh run.")
+    if st.button("Load full-day adaptive-demand scenario"):
+        scenario = ScenarioConfig.from_source(ROOT / "configs/experiments/full_day.yaml").as_dict()
+        st.session_state.scenario = scenario
+        st.session_state.engine = create_engine(scenario)
+        st.session_state.pop("comparison", None)
+        st.rerun()
     config = ScenarioConfig.from_source(st.session_state.scenario).as_dict()
     sim, policy, network = config["simulation"], config["policy"], config["network"]
     a, b = st.columns(2)
@@ -49,12 +55,26 @@ def setup_view():
         sim["base_trip_count"] = st.number_input(
             "Potential requests", 0, 2000, sim["base_trip_count"]
         )
+        sim["demand_profile"] = st.selectbox(
+            "Demand geography through time",
+            ["uniform", "synthetic_daily"],
+            index=["uniform", "synthetic_daily"].index(sim["demand_profile"]),
+            help="Synthetic daily regimes reverse central/peripheral trip flows over the day.",
+        )
+        sim["request_probability"] = st.number_input(
+            "Probability a potential rider requests a ride",
+            0.0,
+            1.0,
+            float(sim["request_probability"]),
+            0.05,
+            help="Shared across policies; separate from acceptance of the quoted price.",
+        )
         sim["demand_multiplier"] = st.number_input(
             "Demand multiplier", 0.0, 4.0, float(sim["demand_multiplier"]), 0.1
         )
     with b:
         sim["start_time"] = st.text_input("Start time · Toronto local time", sim["start_time"])
-        sim["end_time"] = st.text_input("End time · same day", sim["end_time"])
+        sim["end_time"] = st.text_input("End time · 24:00 for a full day", sim["end_time"])
         sim["decision_interval_minutes"] = st.number_input(
             "Decision interval (minutes)", 0.25, 60.0, float(sim["decision_interval_minutes"])
         )
@@ -315,6 +335,9 @@ def explore_view():
         advance_minutes(engine, step)
     if cols[2].button(f"Run next {step * 6:g} minutes", key="run_steps", disabled=engine.finished):
         advance_minutes(engine, step * 6)
+    if st.button("Run to end of day / scenario", disabled=engine.finished):
+        with st.spinner("Simulating all remaining decisions…"):
+            engine.run()
     snapshot = engine.last_snapshot
     st.caption(
         f"Processed through {clock_label(snapshot['processed_time_min'])} · "
