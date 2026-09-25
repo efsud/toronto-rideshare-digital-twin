@@ -1,24 +1,32 @@
+# Historical scenario: explicit legacy offer model.
 project:
   random_seed: 42
-
 simulation:
-  start_time: "07:00"
-  end_time: "10:00"
+  start_time: 07:00
+  end_time: '10:00'
   decision_interval_minutes: 5
   fleet_size: 20
   demand_multiplier: 1.0
-
+  demand_profile: uniform
+  request_probability: 1.0
 behavior:
   rider_price_elasticity: -0.15
   driver_bonus_elasticity: 0.08
   avg_rider_adjustment_cad: 0.0
   avg_driver_bonus_cad: 0.0
-
+  marketplace_model: legacy_offers
 policy:
-  name: "P0_fixed_baseline"
-
-# Sensitivity sweep parameters (used by examples/run_sensitivity.py)
+  name: P0_fixed_baseline
 sensitivity:
-  fleet_size: [10, 20, 40]
-  demand_multiplier: [0.5, 1.0, 1.5]
-  policy: ["P0_fixed_baseline", "P4_two_sided_rules", "P7_full_stack"]
+  fleet_size:
+  - 10
+  - 20
+  - 40
+  demand_multiplier:
+  - 0.5
+  - 1.0
+  - 1.5
+  policy:
+  - P0_fixed_baseline
+  - P4_two_sided_rules
+  - P7_full_stack

@@ -1,22 +1,22 @@
+# Historical scenario: explicit legacy offer model.
 project:
   random_seed: 42
-
 simulation:
-  start_time: "07:00"
-  end_time: "10:00"
+  start_time: 07:00
+  end_time: '10:00'
   decision_interval_minutes: 5
   fleet_size: 20
   base_trip_count: 20
   demand_multiplier: 1.0
   rider_max_wait_minutes: 15
-
+  demand_profile: uniform
+  request_probability: 1.0
 network:
-  graph_path: "data/processed/toronto_drive.graphml"
-  traffic_profile_path: "data/processed/edge_traffic_profile.parquet"
+  graph_path: data/processed/toronto_drive.graphml
+  traffic_profile_path: data/processed/edge_traffic_profile.parquet
   use_time_dependent_routing: true
-
 policy:
-  name: "P0_fixed_baseline"
+  name: P0_fixed_baseline
   max_rider_premium_cad: 5.0
   max_driver_bonus_cad: 12.0
   subsidy_budget_cad: 500.0
@@ -29,3 +29,5 @@ policy:
   fairness_bound_cad: 3.0
   predicted_demand_response_per_cad: 0.06
   predicted_supply_response_per_cad: 0.04
+behavior:
+  marketplace_model: legacy_offers

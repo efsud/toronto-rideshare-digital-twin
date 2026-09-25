@@ -1,0 +1,1678 @@
+{
+  "seconds": 19.234924624906853,
+  "run": {
+    "daily_trajectory": [
+      {
+        "time_min": 0.0,
+        "picked_up_trips": 0,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 0.0,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 0.0,
+        "realized_pickup_total_min": 0.0,
+        "realized_trip_total_min": 0.0,
+        "completed_trips": 0,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 0.0,
+        "total_driver_earnings_cad": 0.0,
+        "platform_net_revenue_cad": 0.0,
+        "rejected_offers": 0,
+        "accepted_offers": 0,
+        "total_offers": 0,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 0,
+        "total_queue_wait_min": 0.0,
+        "total_pickup_time_min": 0.0,
+        "total_trip_time_min": 0.0,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 0.0,
+        "mean_pickup_time_min": 0.0,
+        "mean_trip_time_min": 0.0,
+        "acceptance_rate": 0.0,
+        "service_rate": 0.0,
+        "utilization_rate": 0.0,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 60.0,
+        "picked_up_trips": 0,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 0.0,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 0.0,
+        "realized_pickup_total_min": 0.0,
+        "realized_trip_total_min": 0.0,
+        "completed_trips": 0,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 0.0,
+        "total_driver_earnings_cad": 0.0,
+        "platform_net_revenue_cad": 0.0,
+        "rejected_offers": 0,
+        "accepted_offers": 0,
+        "total_offers": 0,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 0,
+        "total_queue_wait_min": 0.0,
+        "total_pickup_time_min": 0.0,
+        "total_trip_time_min": 0.0,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 0.0,
+        "mean_pickup_time_min": 0.0,
+        "mean_trip_time_min": 0.0,
+        "acceptance_rate": 0.0,
+        "service_rate": 0.0,
+        "utilization_rate": 0.0,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 120.0,
+        "picked_up_trips": 0,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 0.0,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 0.0,
+        "realized_pickup_total_min": 0.0,
+        "realized_trip_total_min": 0.0,
+        "completed_trips": 0,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 0.0,
+        "total_driver_earnings_cad": 0.0,
+        "platform_net_revenue_cad": 0.0,
+        "rejected_offers": 0,
+        "accepted_offers": 0,
+        "total_offers": 0,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 0,
+        "total_queue_wait_min": 0.0,
+        "total_pickup_time_min": 0.0,
+        "total_trip_time_min": 0.0,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 0.0,
+        "mean_pickup_time_min": 0.0,
+        "mean_trip_time_min": 0.0,
+        "acceptance_rate": 0.0,
+        "service_rate": 0.0,
+        "utilization_rate": 0.0,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 180.0,
+        "picked_up_trips": 0,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 0.0,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 0.0,
+        "realized_pickup_total_min": 0.0,
+        "realized_trip_total_min": 0.0,
+        "completed_trips": 0,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 0.0,
+        "total_driver_earnings_cad": 0.0,
+        "platform_net_revenue_cad": 0.0,
+        "rejected_offers": 0,
+        "accepted_offers": 0,
+        "total_offers": 0,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 0,
+        "total_queue_wait_min": 0.0,
+        "total_pickup_time_min": 0.0,
+        "total_trip_time_min": 0.0,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 0.0,
+        "mean_pickup_time_min": 0.0,
+        "mean_trip_time_min": 0.0,
+        "acceptance_rate": 0.0,
+        "service_rate": 0.0,
+        "utilization_rate": 0.0,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 240.0,
+        "picked_up_trips": 0,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 0.0,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 0.0,
+        "realized_pickup_total_min": 0.0,
+        "realized_trip_total_min": 0.0,
+        "completed_trips": 0,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 0.0,
+        "total_driver_earnings_cad": 0.0,
+        "platform_net_revenue_cad": 0.0,
+        "rejected_offers": 0,
+        "accepted_offers": 0,
+        "total_offers": 0,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 0,
+        "total_queue_wait_min": 0.0,
+        "total_pickup_time_min": 0.0,
+        "total_trip_time_min": 0.0,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 0.0,
+        "mean_pickup_time_min": 0.0,
+        "mean_trip_time_min": 0.0,
+        "acceptance_rate": 0.0,
+        "service_rate": 0.0,
+        "utilization_rate": 0.0,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 300.0,
+        "picked_up_trips": 0,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 0.0,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 0.0,
+        "realized_pickup_total_min": 0.0,
+        "realized_trip_total_min": 0.0,
+        "completed_trips": 0,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 0.0,
+        "total_driver_earnings_cad": 0.0,
+        "platform_net_revenue_cad": 0.0,
+        "rejected_offers": 0,
+        "accepted_offers": 0,
+        "total_offers": 0,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 0,
+        "total_queue_wait_min": 0.0,
+        "total_pickup_time_min": 0.0,
+        "total_trip_time_min": 0.0,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 0.0,
+        "mean_pickup_time_min": 0.0,
+        "mean_trip_time_min": 0.0,
+        "acceptance_rate": 0.0,
+        "service_rate": 0.0,
+        "utilization_rate": 0.0,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 360.0,
+        "picked_up_trips": 1,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 29.44110835844964,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 16.250859664346706,
+        "realized_pickup_total_min": 14.767451015774952,
+        "realized_trip_total_min": 14.673657342674687,
+        "completed_trips": 1,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 19.985435727558567,
+        "total_driver_earnings_cad": 14.989076795668925,
+        "platform_net_revenue_cad": 4.996358931889642,
+        "rejected_offers": 0,
+        "accepted_offers": 1,
+        "total_offers": 1,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 1,
+        "total_queue_wait_min": 1.4834086485717535,
+        "total_pickup_time_min": 14.767451015774961,
+        "total_trip_time_min": 14.673657342674694,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 16.250859664346706,
+        "mean_pickup_time_min": 14.767451015774952,
+        "mean_trip_time_min": 14.673657342674687,
+        "acceptance_rate": 1.0,
+        "service_rate": 1.0,
+        "utilization_rate": 0.0163561713102498,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 420.0,
+        "picked_up_trips": 1,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 29.44110835844964,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 16.250859664346706,
+        "realized_pickup_total_min": 14.767451015774952,
+        "realized_trip_total_min": 14.673657342674687,
+        "completed_trips": 1,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 19.985435727558567,
+        "total_driver_earnings_cad": 14.989076795668925,
+        "platform_net_revenue_cad": 4.996358931889642,
+        "rejected_offers": 0,
+        "accepted_offers": 1,
+        "total_offers": 1,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 1,
+        "total_queue_wait_min": 1.4834086485717535,
+        "total_pickup_time_min": 14.767451015774961,
+        "total_trip_time_min": 14.673657342674694,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 16.250859664346706,
+        "mean_pickup_time_min": 14.767451015774952,
+        "mean_trip_time_min": 14.673657342674687,
+        "acceptance_rate": 1.0,
+        "service_rate": 1.0,
+        "utilization_rate": 0.014019575408785543,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 480.0,
+        "picked_up_trips": 1,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 29.44110835844964,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 16.250859664346706,
+        "realized_pickup_total_min": 14.767451015774952,
+        "realized_trip_total_min": 14.673657342674687,
+        "completed_trips": 1,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 19.985435727558567,
+        "total_driver_earnings_cad": 14.989076795668925,
+        "platform_net_revenue_cad": 4.996358931889642,
+        "rejected_offers": 0,
+        "accepted_offers": 1,
+        "total_offers": 1,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 1,
+        "total_queue_wait_min": 1.4834086485717535,
+        "total_pickup_time_min": 14.767451015774961,
+        "total_trip_time_min": 14.673657342674694,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 16.250859664346706,
+        "mean_pickup_time_min": 14.767451015774952,
+        "mean_trip_time_min": 14.673657342674687,
+        "acceptance_rate": 1.0,
+        "service_rate": 1.0,
+        "utilization_rate": 0.01226712848268735,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 540.0,
+        "picked_up_trips": 1,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 29.44110835844964,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 16.250859664346706,
+        "realized_pickup_total_min": 14.767451015774952,
+        "realized_trip_total_min": 14.673657342674687,
+        "completed_trips": 1,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 19.985435727558567,
+        "total_driver_earnings_cad": 14.989076795668925,
+        "platform_net_revenue_cad": 4.996358931889642,
+        "rejected_offers": 0,
+        "accepted_offers": 1,
+        "total_offers": 1,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 1,
+        "total_queue_wait_min": 1.4834086485717535,
+        "total_pickup_time_min": 14.767451015774961,
+        "total_trip_time_min": 14.673657342674694,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 16.250859664346706,
+        "mean_pickup_time_min": 14.767451015774952,
+        "mean_trip_time_min": 14.673657342674687,
+        "acceptance_rate": 1.0,
+        "service_rate": 1.0,
+        "utilization_rate": 0.0109041142068332,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 600.0,
+        "picked_up_trips": 1,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 34.44110835844964,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 16.250859664346706,
+        "realized_pickup_total_min": 14.767451015774952,
+        "realized_trip_total_min": 14.673657342674687,
+        "completed_trips": 1,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 19.985435727558567,
+        "total_driver_earnings_cad": 14.989076795668925,
+        "platform_net_revenue_cad": 4.996358931889642,
+        "rejected_offers": 10,
+        "accepted_offers": 2,
+        "total_offers": 12,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 1,
+        "assigned_trips": 2,
+        "total_queue_wait_min": 13.927065644021582,
+        "total_pickup_time_min": 20.98793988751534,
+        "total_trip_time_min": 32.890170889433435,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 16.250859664346706,
+        "mean_pickup_time_min": 14.767451015774952,
+        "mean_trip_time_min": 14.673657342674687,
+        "acceptance_rate": 0.16666666666666666,
+        "service_rate": 0.5,
+        "utilization_rate": 0.011480369452816547,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 660.0,
+        "picked_up_trips": 2,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 53.878110776948745,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 34.915005531536906,
+        "realized_pickup_total_min": 20.987939887515324,
+        "realized_trip_total_min": 32.89017088943342,
+        "completed_trips": 2,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 47.32657399176291,
+        "total_driver_earnings_cad": 35.49493049382218,
+        "platform_net_revenue_cad": 11.831643497940732,
+        "rejected_offers": 10,
+        "accepted_offers": 2,
+        "total_offers": 12,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 2,
+        "total_queue_wait_min": 13.927065644021582,
+        "total_pickup_time_min": 20.98793988751534,
+        "total_trip_time_min": 32.890170889433435,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 17.457502765768453,
+        "mean_pickup_time_min": 10.493969943757662,
+        "mean_trip_time_min": 16.44508544471671,
+        "acceptance_rate": 0.16666666666666666,
+        "service_rate": 1.0,
+        "utilization_rate": 0.016326700235439015,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 720.0,
+        "picked_up_trips": 2,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 53.878110776948745,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 34.915005531536906,
+        "realized_pickup_total_min": 20.987939887515324,
+        "realized_trip_total_min": 32.89017088943342,
+        "completed_trips": 2,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 47.32657399176291,
+        "total_driver_earnings_cad": 35.49493049382218,
+        "platform_net_revenue_cad": 11.831643497940732,
+        "rejected_offers": 10,
+        "accepted_offers": 2,
+        "total_offers": 12,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 2,
+        "total_queue_wait_min": 13.927065644021582,
+        "total_pickup_time_min": 20.98793988751534,
+        "total_trip_time_min": 32.890170889433435,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 17.457502765768453,
+        "mean_pickup_time_min": 10.493969943757662,
+        "mean_trip_time_min": 16.44508544471671,
+        "acceptance_rate": 0.16666666666666666,
+        "service_rate": 1.0,
+        "utilization_rate": 0.014966141882485762,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 780.0,
+        "picked_up_trips": 3,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 73.87811077694874,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 48.077981754503355,
+        "realized_pickup_total_min": 31.033835879370542,
+        "realized_trip_total_min": 32.89017088943342,
+        "completed_trips": 2,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 47.32657399176291,
+        "total_driver_earnings_cad": 35.49493049382218,
+        "platform_net_revenue_cad": 11.831643497940732,
+        "rejected_offers": 11,
+        "accepted_offers": 3,
+        "total_offers": 14,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 1,
+        "assigned_trips": 3,
+        "total_queue_wait_min": 17.044145875132813,
+        "total_pickup_time_min": 31.033835879370585,
+        "total_trip_time_min": 56.90124666837775,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 16.025993918167785,
+        "mean_pickup_time_min": 10.34461195979018,
+        "mean_trip_time_min": 16.44508544471671,
+        "acceptance_rate": 0.21428571428571427,
+        "service_rate": 0.6666666666666666,
+        "utilization_rate": 0.018943105327422754,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 840.0,
+        "picked_up_trips": 3,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 87.93508254774832,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 48.077981754503355,
+        "realized_pickup_total_min": 31.033835879370542,
+        "realized_trip_total_min": 56.90124666837778,
+        "completed_trips": 3,
+        "unserved_trips": 0,
+        "total_rider_payment_cad": 92.66047066421156,
+        "total_driver_earnings_cad": 69.49535299815867,
+        "platform_net_revenue_cad": 23.165117666052893,
+        "rejected_offers": 11,
+        "accepted_offers": 3,
+        "total_offers": 14,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 0,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 3,
+        "total_queue_wait_min": 17.044145875132813,
+        "total_pickup_time_min": 31.033835879370585,
+        "total_trip_time_min": 56.90124666837775,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 16.025993918167785,
+        "mean_pickup_time_min": 10.34461195979018,
+        "mean_trip_time_min": 18.967082222792595,
+        "acceptance_rate": 0.21428571428571427,
+        "service_rate": 1.0,
+        "utilization_rate": 0.020936924416130553,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 3.0,
+            "imbalance": -3.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 900.0,
+        "picked_up_trips": 4,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 102.7733544812184,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 61.7969354740697,
+        "realized_pickup_total_min": 41.76444023702362,
+        "realized_trip_total_min": 61.008914244194784,
+        "completed_trips": 4,
+        "unserved_trips": 1,
+        "total_rider_payment_cad": 100.47481295050316,
+        "total_driver_earnings_cad": 75.35610971287737,
+        "platform_net_revenue_cad": 25.118703237625795,
+        "rejected_offers": 11,
+        "accepted_offers": 4,
+        "total_offers": 15,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 1,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 4,
+        "total_queue_wait_min": 20.032495237046078,
+        "total_pickup_time_min": 41.76444023702364,
+        "total_trip_time_min": 61.00891424419477,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 15.449233868517425,
+        "mean_pickup_time_min": 10.441110059255905,
+        "mean_trip_time_min": 15.252228561048696,
+        "acceptance_rate": 0.26666666666666666,
+        "service_rate": 0.8,
+        "utilization_rate": 0.022838523218048534,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 3.0,
+            "imbalance": -3.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 960.0,
+        "picked_up_trips": 5,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 122.26125174036787,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 72.7463552550617,
+        "realized_pickup_total_min": 50.74290252222937,
+        "realized_trip_total_min": 71.5183492181385,
+        "completed_trips": 5,
+        "unserved_trips": 2,
+        "total_rider_payment_cad": 117.16288401519304,
+        "total_driver_earnings_cad": 87.87216301139478,
+        "platform_net_revenue_cad": 29.290721003798268,
+        "rejected_offers": 11,
+        "accepted_offers": 5,
+        "total_offers": 16,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 2,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 5,
+        "total_queue_wait_min": 22.00345273283233,
+        "total_pickup_time_min": 50.742902522229386,
+        "total_trip_time_min": 71.51834921813847,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.54927105101234,
+        "mean_pickup_time_min": 10.148580504445874,
+        "mean_trip_time_min": 14.303669843627699,
+        "acceptance_rate": 0.3125,
+        "service_rate": 0.7142857142857143,
+        "utilization_rate": 0.02547109411257664,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 3.0,
+            "imbalance": -3.0
+          }
+        }
+      },
+      {
+        "time_min": 1020.0,
+        "picked_up_trips": 5,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 127.26125174036787,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 72.7463552550617,
+        "realized_pickup_total_min": 50.74290252222937,
+        "realized_trip_total_min": 71.5183492181385,
+        "completed_trips": 5,
+        "unserved_trips": 3,
+        "total_rider_payment_cad": 117.16288401519304,
+        "total_driver_earnings_cad": 87.87216301139478,
+        "platform_net_revenue_cad": 29.290721003798268,
+        "rejected_offers": 15,
+        "accepted_offers": 6,
+        "total_offers": 21,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 3,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 1,
+        "assigned_trips": 6,
+        "total_queue_wait_min": 22.050834854028153,
+        "total_pickup_time_min": 59.044154335135715,
+        "total_trip_time_min": 85.09324425041943,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.54927105101234,
+        "mean_pickup_time_min": 10.148580504445874,
+        "mean_trip_time_min": 14.303669843627699,
+        "acceptance_rate": 0.2857142857142857,
+        "service_rate": 0.5555555555555556,
+        "utilization_rate": 0.024953186615758405,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 1080.0,
+        "picked_up_trips": 6,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 154.13739858555522,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 81.09498918916387,
+        "realized_pickup_total_min": 59.044154335135715,
+        "realized_trip_total_min": 85.0932442504195,
+        "completed_trips": 6,
+        "unserved_trips": 3,
+        "total_rider_payment_cad": 137.95613947228702,
+        "total_driver_earnings_cad": 103.46710460421525,
+        "platform_net_revenue_cad": 34.48903486807177,
+        "rejected_offers": 15,
+        "accepted_offers": 7,
+        "total_offers": 22,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 3,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 1,
+        "assigned_trips": 7,
+        "total_queue_wait_min": 22.49205735541159,
+        "total_pickup_time_min": 79.3894380695764,
+        "total_trip_time_min": 95.99084538609956,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 13.515831531527311,
+        "mean_pickup_time_min": 9.840692389189286,
+        "mean_trip_time_min": 14.182207375069916,
+        "acceptance_rate": 0.3181818181818182,
+        "service_rate": 0.6,
+        "utilization_rate": 0.028543962701028745,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 1140.0,
+        "picked_up_trips": 7,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 175.38028345567608,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 101.88149542498803,
+        "realized_pickup_total_min": 79.38943806957644,
+        "realized_trip_total_min": 95.99084538609964,
+        "completed_trips": 7,
+        "unserved_trips": 4,
+        "total_rider_payment_cad": 155.84249928107286,
+        "total_driver_earnings_cad": 116.88187446080462,
+        "platform_net_revenue_cad": 38.96062482026824,
+        "rejected_offers": 15,
+        "accepted_offers": 7,
+        "total_offers": 22,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 4,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 7,
+        "total_queue_wait_min": 22.49205735541159,
+        "total_pickup_time_min": 79.3894380695764,
+        "total_trip_time_min": 95.99084538609956,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.554499346426862,
+        "mean_pickup_time_min": 11.341348295653777,
+        "mean_trip_time_min": 13.712977912299948,
+        "acceptance_rate": 0.3181818181818182,
+        "service_rate": 0.6363636363636364,
+        "utilization_rate": 0.030768470781697557,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 3.0,
+            "imbalance": -3.0
+          }
+        }
+      },
+      {
+        "time_min": 1200.0,
+        "picked_up_trips": 7,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 175.38028345567608,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 101.88149542498803,
+        "realized_pickup_total_min": 79.38943806957644,
+        "realized_trip_total_min": 95.99084538609964,
+        "completed_trips": 7,
+        "unserved_trips": 4,
+        "total_rider_payment_cad": 155.84249928107286,
+        "total_driver_earnings_cad": 116.88187446080462,
+        "platform_net_revenue_cad": 38.96062482026824,
+        "rejected_offers": 15,
+        "accepted_offers": 7,
+        "total_offers": 22,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 4,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 7,
+        "total_queue_wait_min": 22.49205735541159,
+        "total_pickup_time_min": 79.3894380695764,
+        "total_trip_time_min": 95.99084538609956,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.554499346426862,
+        "mean_pickup_time_min": 11.341348295653777,
+        "mean_trip_time_min": 13.712977912299948,
+        "acceptance_rate": 0.3181818181818182,
+        "service_rate": 0.6363636363636364,
+        "utilization_rate": 0.02923004724261268,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 3.0,
+            "imbalance": -3.0
+          }
+        }
+      },
+      {
+        "time_min": 1260.0,
+        "picked_up_trips": 8,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 199.46898744276058,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 116.00903213920418,
+        "realized_pickup_total_min": 88.81366184379584,
+        "realized_trip_total_min": 110.65532559896474,
+        "completed_trips": 8,
+        "unserved_trips": 5,
+        "total_rider_payment_cad": 176.8542855202222,
+        "total_driver_earnings_cad": 132.64071414016664,
+        "platform_net_revenue_cad": 44.213571380055555,
+        "rejected_offers": 15,
+        "accepted_offers": 8,
+        "total_offers": 23,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 5,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 8,
+        "total_queue_wait_min": 27.19537029540834,
+        "total_pickup_time_min": 88.81366184379574,
+        "total_trip_time_min": 110.65532559896468,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.501129017400523,
+        "mean_pickup_time_min": 11.10170773047448,
+        "mean_trip_time_min": 13.831915699870592,
+        "acceptance_rate": 0.34782608695652173,
+        "service_rate": 0.6153846153846154,
+        "utilization_rate": 0.031661744038533425,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 1320.0,
+        "picked_up_trips": 8,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 199.46898744276058,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 116.00903213920418,
+        "realized_pickup_total_min": 88.81366184379584,
+        "realized_trip_total_min": 110.65532559896474,
+        "completed_trips": 8,
+        "unserved_trips": 5,
+        "total_rider_payment_cad": 176.8542855202222,
+        "total_driver_earnings_cad": 132.64071414016664,
+        "platform_net_revenue_cad": 44.213571380055555,
+        "rejected_offers": 15,
+        "accepted_offers": 8,
+        "total_offers": 23,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 5,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 8,
+        "total_queue_wait_min": 27.19537029540834,
+        "total_pickup_time_min": 88.81366184379574,
+        "total_trip_time_min": 110.65532559896468,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.501129017400523,
+        "mean_pickup_time_min": 11.10170773047448,
+        "mean_trip_time_min": 13.831915699870592,
+        "acceptance_rate": 0.34782608695652173,
+        "service_rate": 0.6153846153846154,
+        "utilization_rate": 0.030222573854963724,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 1380.0,
+        "picked_up_trips": 8,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 199.46898744276058,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 116.00903213920418,
+        "realized_pickup_total_min": 88.81366184379584,
+        "realized_trip_total_min": 110.65532559896474,
+        "completed_trips": 8,
+        "unserved_trips": 5,
+        "total_rider_payment_cad": 176.8542855202222,
+        "total_driver_earnings_cad": 132.64071414016664,
+        "platform_net_revenue_cad": 44.213571380055555,
+        "rejected_offers": 15,
+        "accepted_offers": 8,
+        "total_offers": 23,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 5,
+        "unserved_arrived_trips": 0,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 8,
+        "total_queue_wait_min": 27.19537029540834,
+        "total_pickup_time_min": 88.81366184379574,
+        "total_trip_time_min": 110.65532559896468,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.501129017400523,
+        "mean_pickup_time_min": 11.10170773047448,
+        "mean_trip_time_min": 13.831915699870592,
+        "acceptance_rate": 0.34782608695652173,
+        "service_rate": 0.6153846153846154,
+        "utilization_rate": 0.02890854890474791,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      },
+      {
+        "time_min": 1440.0,
+        "picked_up_trips": 8,
+        "waiting_trips": 0,
+        "elapsed_busy_min": 199.46898744276058,
+        "elapsed_reposition_min": 0.0,
+        "realized_wait_total_min": 116.00903213920418,
+        "realized_pickup_total_min": 88.81366184379584,
+        "realized_trip_total_min": 110.65532559896474,
+        "completed_trips": 8,
+        "unserved_trips": 5,
+        "total_rider_payment_cad": 176.8542855202222,
+        "total_driver_earnings_cad": 132.64071414016664,
+        "platform_net_revenue_cad": 44.213571380055555,
+        "rejected_offers": 15,
+        "accepted_offers": 8,
+        "total_offers": 23,
+        "subsidy_spend_cad": 0.0,
+        "optimization_steps": 0,
+        "cancelled_trips": 0,
+        "rider_price_declines": 5,
+        "unserved_arrived_trips": 5,
+        "not_yet_released_trips": 0,
+        "in_progress_trips": 0,
+        "assigned_trips": 8,
+        "total_queue_wait_min": 27.19537029540834,
+        "total_pickup_time_min": 88.81366184379574,
+        "total_trip_time_min": 110.65532559896468,
+        "total_reposition_time_min": 0.0,
+        "mean_wait_min": 14.501129017400523,
+        "mean_pickup_time_min": 11.10170773047448,
+        "mean_trip_time_min": 13.831915699870592,
+        "acceptance_rate": 0.34782608695652173,
+        "service_rate": 0.6153846153846154,
+        "utilization_rate": 0.027704026033716748,
+        "regional_state": {
+          "central": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          },
+          "west": {
+            "demand": 0,
+            "supply": 0,
+            "imbalance": 0
+          },
+          "east": {
+            "demand": 0.0,
+            "supply": 1.0,
+            "imbalance": -1.0
+          },
+          "north": {
+            "demand": 0.0,
+            "supply": 2.0,
+            "imbalance": -2.0
+          }
+        }
+      }
+    ],
+    "timestamp": "2026-09-25T15:29:58.776750+00:00",
+    "manifest": {
+      "road_speed_calibration": {
+        "status": "calibrated_speed_parameters_with_holdout",
+        "scope": "spot speed-bin midpoints; not OD travel times or ride-hailing behavior",
+        "report_sha256": "ded1216680b914ef8547fbfb021b3cff5188e42aa3bc6ebadb9405a3a468b226",
+        "parameters": {
+          "global_scale": 0.9452805210214448,
+          "bucket_scales": {
+            "07:00": 0.9831997560027975,
+            "08:30": 0.9195530868144615,
+            "12:00": 0.924057373605297,
+            "17:00": 0.9329360157566196
+          },
+          "training_rows": 23284,
+          "training_sites": 801,
+          "objective": "equal-site weighted squared speed error",
+          "bounds": [
+            0.2,
+            1.5
+          ]
+        }
+      },
+      "schema_version": 2,
+      "model_version": "0.6.0.dev0",
+      "commit": "0ac0848dda3995f8f3f16bf6ca1f37e9c4a6446c",
+      "working_tree_dirty": true,
+      "scenario": {
+        "project": {
+          "random_seed": 42,
+          "model_version": "0.6.0.dev0"
+        },
+        "simulation": {
+          "start_time": "00:00",
+          "end_time": "24:00",
+          "decision_interval_minutes": 5,
+          "fleet_size": 5,
+          "base_trip_count": 20,
+          "demand_multiplier": 1.0,
+          "demand_profile": "synthetic_daily",
+          "request_probability": 0.8,
+          "rider_max_wait_minutes": 15
+        },
+        "network": {
+          "mode": "network_research",
+          "graph_path": "data/processed/toronto_drive.graphml",
+          "traffic_profile_path": "data/processed/calibrated_speed_profile.parquet",
+          "use_time_dependent_routing": true
+        },
+        "behavior": {
+          "profile": "shared",
+          "additional_bonus_response": false,
+          "marketplace_model": "driver_choice",
+          "rider_intercept": 2.0,
+          "rider_price_per_cad": 0.08,
+          "driver_occupied_penalty": 0.02
+        },
+        "policy": {
+          "name": "P0_fixed_baseline",
+          "matching_strategy": "policy_default",
+          "max_rider_premium_cad": 5.0,
+          "max_driver_bonus_cad": 12.0,
+          "subsidy_budget_cad": 500.0,
+          "fairness_bound_cad": 3.0,
+          "rider_price_elasticity": -0.3,
+          "driver_bonus_elasticity": 0.4,
+          "reposition_acceptance": 0.7,
+          "acceptance_intercept": 0.5,
+          "acceptance_earnings_per_cad": 0.1,
+          "acceptance_pickup_minutes_penalty": 0.18,
+          "od_origin_gain": 0.5,
+          "od_transfer_gain": 1.0,
+          "od_discount_gain": 0.5,
+          "predicted_demand_response_per_cad": 0.06,
+          "predicted_supply_response_per_cad": 0.04
+        }
+      },
+      "source_checksums": {
+        "graph_path": "c457c7463e484e20f66b757a8e8882a1c9e9aa140faf6652115622f991f7fbc6",
+        "traffic_profile_path": "8d09ac98ea36d13bb1702df29cf667af23698713d08f76d6c25e7332a2f42b69"
+      },
+      "random_streams": {
+        "demand": 3299503807182972670,
+        "fleet": 12756309315864463912,
+        "behavior": 8689078872892211521,
+        "network_demand": 12498187691209932451,
+        "network_fleet": 9978106933656276993
+      },
+      "matching_backend": "sequential multinomial driver choice with outside option",
+      "pricing_decisions": [],
+      "population_sampling": "weighted eligible road nodes",
+      "routing_mode_counts": {
+        "time-dependent network": 16
+      },
+      "metric_definitions": {
+        "service_rate": "Completed by horizon / arrived potential requests",
+        "mean_wait_min": "Request-to-pickup minutes, riders actually collected only",
+        "utilization_rate": "Elapsed pickup + occupied minutes / fleet minutes; excludes repositioning",
+        "total_driver_earnings_cad": "Gross earnings; excludes vehicle expenses",
+        "platform_net_revenue_cad": "Rider payments minus gross driver earnings; before operating costs",
+        "total_pickup_time_min": "Planned pickup duration for accepted assignments",
+        "total_trip_time_min": "Planned occupied duration for accepted assignments",
+        "total_reposition_time_min": "Planned reposition duration",
+        "unserved_trips": "Cancelled + price declined + still waiting at horizon"
+      },
+      "data_status": {
+        "demand": "synthetic synthetic_daily",
+        "behavior": "assumed",
+        "traffic": "profile supplied; inspect provenance",
+        "empirical_validation": "not_evaluated"
+      }
+    },
+    "config_path": "applied scenario",
+    "policy_id": "P0_fixed_baseline",
+    "random_seed": 42,
+    "simulation_start_time_min": 0.0,
+    "simulation_end_time_min": 1440.0,
+    "generated_trip_count": 13,
+    "metrics": {
+      "picked_up_trips": 8,
+      "waiting_trips": 0,
+      "elapsed_busy_min": 199.46898744276058,
+      "elapsed_reposition_min": 0.0,
+      "realized_wait_total_min": 116.00903213920418,
+      "realized_pickup_total_min": 88.81366184379584,
+      "realized_trip_total_min": 110.65532559896474,
+      "completed_trips": 8,
+      "unserved_trips": 5,
+      "total_rider_payment_cad": 176.8542855202222,
+      "total_driver_earnings_cad": 132.64071414016664,
+      "platform_net_revenue_cad": 44.213571380055555,
+      "rejected_offers": 15,
+      "accepted_offers": 8,
+      "total_offers": 23,
+      "subsidy_spend_cad": 0.0,
+      "optimization_steps": 0,
+      "cancelled_trips": 0,
+      "rider_price_declines": 5,
+      "unserved_arrived_trips": 5,
+      "not_yet_released_trips": 0,
+      "in_progress_trips": 0,
+      "assigned_trips": 8,
+      "total_queue_wait_min": 27.19537029540834,
+      "total_pickup_time_min": 88.81366184379574,
+      "total_trip_time_min": 110.65532559896468,
+      "total_reposition_time_min": 0.0,
+      "mean_wait_min": 14.501129017400523,
+      "mean_pickup_time_min": 11.10170773047448,
+      "mean_trip_time_min": 13.831915699870592,
+      "acceptance_rate": 0.34782608695652173,
+      "service_rate": 0.6153846153846154,
+      "utilization_rate": 0.027704026033716748,
+      "routing_mode_counts": {
+        "time-dependent network": 16
+      }
+    },
+    "mean_wait_min": 14.501129017400523,
+    "p50_wait_min": 13.923245216891246,
+    "p95_wait_min": 20.043680106802274,
+    "reposition_events": 0,
+    "used_network_routing": true,
+    "routing_mode": "time-dependent network",
+    "routing_fallback_reason": null,
+    "matching_strategy": "driver_choice",
+    "matching_backend": "sequential multinomial driver choice with outside option",
+    "routing_mode_share": {
+      "time-dependent network": 1.0
+    },
+    "zone_state": {
+      "882b9bc46dfffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bd66dfffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bc64bfffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bc71bfffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      },
+      "882b9bd53dfffff": {
+        "demand": 0.0,
+        "supply": 1.0,
+        "imbalance": -1.0,
+        "rider_premium_cad": 0.0,
+        "driver_bonus_cad": 0.0
+      }
+    },
+    "policy_objective": "serve demand with minimum pickup time",
+    "policy_strategy": "fixed fares and deterministic nearest-driver offers",
+    "policy_assumptions": {
+      "behavior_enabled": true,
+      "rider_price_elasticity": -0.3,
+      "driver_bonus_elasticity": 0.4,
+      "reposition_acceptance": 0.7,
+      "offer_acceptance": {
+        "intercept": 0.5,
+        "earnings_per_cad": 0.1,
+        "pickup_minutes_penalty": 0.18
+      },
+      "rider_max_wait_minutes": 15,
+      "predicted_demand_response_per_cad": 0.06,
+      "predicted_supply_response_per_cad": 0.04
+    }
+  }
+}

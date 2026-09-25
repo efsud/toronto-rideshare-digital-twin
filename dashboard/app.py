@@ -27,6 +27,16 @@ from toronto_rideshare.zones import toronto_boundary_geojson
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def metric_label(name):
+    return {
+        "mean_wait_min": "Realized pickup wait (minutes)",
+        "platform_net_revenue_cad": "Platform contribution before costs (CAD)",
+        "driver_earnings_cad": "Driver gross earnings (CAD)",
+        "rider_payment_cad": "Rider payments (CAD)",
+        "subsidy_spend_cad": "Settled subsidies (CAD)",
+    }.get(name, name.replace("_", " ").capitalize())
+
+
 def clock_label(minutes):
     return f"{int(minutes) // 60:02d}:{int(minutes) % 60:02d}"
 
@@ -100,7 +110,7 @@ def setup_view():
         behavior = config["behavior"]
         for key, label, low, high in (
             ("rider_intercept", "Rider acceptance intercept", -10.0, 10.0),
-            ("rider_price_per_cad", "Rider total-price sensitivity (per CAD)", 0.0, 1.0),
+            ("rider_price_per_cad", "Rider total-price sensitivity (per CAD)", 0.0, 2.0),
             ("driver_occupied_penalty", "Driver occupied-time penalty (per minute)", 0.0, 1.0),
         ):
             behavior[key] = st.number_input(label, low, high, float(behavior[key]))
@@ -251,7 +261,7 @@ def render_map(engine):
             "analysis zones, clipped for display.\n\n"
             "**●** Waiting pickup · **◆** Requested destination · **▣** "
             "Driver (state in tooltip)\n\n"
-            "**✓ / ×** Accepted / rejected offer, latest step only\n\n"
+            "**✓ / ×** Accepted trip / driver chose to stay idle, latest step only\n\n"
             "**Solid link:** Road-network route · **Segmented link:** "
             "Straight-line estimate — illustrative"
         )
@@ -381,6 +391,35 @@ def explore_view():
             "Elapsed minutes from midnight. Counts are cumulative for completions; "
             "waiting and in-progress counts show the current population."
         )
+    if engine.history and "regional_state" in engine.history[0]:
+        with st.expander("Where supply and demand shift through the day", expanded=True):
+            quantity = st.selectbox(
+                "Regional quantity",
+                ["demand", "supply", "imbalance"],
+                format_func=lambda v: {
+                    "demand": "Waiting riders",
+                    "supply": "Available drivers",
+                    "imbalance": "Waiting riders minus available drivers",
+                }[v],
+            )
+            regional = pd.DataFrame(
+                [
+                    {
+                        "Minute": row["time_min"],
+                        **{
+                            region: counts[quantity]
+                            for region, counts in row["regional_state"].items()
+                        },
+                    }
+                    for row in engine.history
+                ]
+            )
+            st.line_chart(regional, x="Minute", y=["central", "west", "east", "north"])
+            st.caption(
+                "Analytical scenario regions, not official neighborhoods. "
+                "Morning demand flows inward; "
+                "evening demand flows outward. Lines show realized waiting demand/available supply."
+            )
     with st.expander("Price proposals and rider/driver decisions", expanded=False):
         decisions = [
             e
@@ -480,7 +519,10 @@ def compare_view():
         return
     result = st.session_state.comparison
     metric = st.selectbox(
-        "Outcome", list(result["aggregates"][0]["metrics"]), key="comparison_metric"
+        "Outcome",
+        list(result["aggregates"][0]["metrics"]),
+        key="comparison_metric",
+        format_func=metric_label,
     )
     rows = []
     for row in result["aggregates"]:
@@ -502,6 +544,49 @@ def compare_view():
         "uncertainty unavailable. Simulation uncertainty is not evidence "
         "of calibration. No automatic winner is selected."
     )
+    trajectories = []
+    history_metric = st.selectbox(
+        "Compare across the day",
+        [
+            "completed_trips",
+            "mean_wait_min",
+            "platform_net_revenue_cad",
+            "waiting_trips",
+            "in_progress_trips",
+            "utilization_rate",
+        ],
+        format_func=metric_label,
+    )
+    for run in result["replicates"]:
+        for point in run.get("daily_trajectory", []):
+            trajectories.append(
+                {
+                    "Minute": point["time_min"],
+                    "Policy": POLICY_NAMES[PolicyId(run["policy_id"])],
+                    "Value": point[history_metric],
+                }
+            )
+    if trajectories:
+        curve = pd.DataFrame(trajectories).groupby(["Minute", "Policy"]).Value.mean().unstack()
+        curve = curve.rename(
+            columns={
+                POLICY_NAMES[PolicyId.P0]: "P0 · Baseline",
+                POLICY_NAMES[PolicyId.P5]: "P5 · Reposition",
+                POLICY_NAMES[PolicyId.ADAPTIVE]: "Adaptive OD",
+            }
+        )
+        curve.index = curve.index / 60
+        curve.index.name = "Hour of day"
+        palette = {
+            "Adaptive OD": "#7B3294",
+            "P0 · Baseline": "#176B5B",
+            "P5 · Reposition": "#B45713",
+        }
+        st.line_chart(curve, color=[palette[column] for column in curve.columns])
+        st.caption(
+            "Mean trajectory across paired seeds; final-effect uncertainty is in the table above. "
+            "Waiting-time curves are cumulative means among riders collected by that time."
+        )
     st.download_button(
         "Export comparison and manifests",
         json.dumps(result, indent=2),
@@ -522,13 +607,70 @@ def model_view():
     handbook = ROOT / "docs" / "DAILY_MARKETPLACE.md"
     if handbook.exists():
         st.markdown(handbook.read_text())
+    st.subheader("Calibration and parameter tuning")
+    st.write(
+        "Public spot-speed data can tune road costs. Demand, rider response, and driver-choice "
+        "coefficients remain explicit assumptions until suitable observations are available."
+    )
+    calibration_path = ROOT / "results" / "speed_calibration.json"
+    if calibration_path.exists():
+        report = json.loads(calibration_path.read_text())
+        st.dataframe(
+            pd.DataFrame(
+                [
+                    {"Prediction": label, **report[key]}
+                    for label, key in (
+                        ("Fitted road-speed scales", "calibrated"),
+                        ("Free-flow baseline", "free_flow"),
+                    )
+                ]
+            ),
+            hide_index=True,
+        )
+        with st.expander("Fitted parameters, data scope and provenance"):
+            st.json({k: v for k, v in report.items() if k not in ("training_sites", "test_sites")})
+        st.caption(
+            "Applying this fit selects road-network routing and starts a new run. "
+            "It does not calibrate behavior."
+        )
+        if st.button("Apply calibrated road profile and reset scenario"):
+            from toronto_rideshare.calibration import calibrated_road_scenario
+
+            try:
+                scenario = calibrated_road_scenario(st.session_state.scenario, calibration_path)
+                engine = create_engine(scenario)
+            except (ValueError, OSError, KeyError) as exc:
+                st.error(str(exc))
+            else:
+                st.session_state.scenario, st.session_state.engine = scenario, engine
+                st.session_state.pop("comparison", None)
+                st.success("Calibrated road profile applied. Open Explore to begin the new run.")
+    else:
+        st.info(
+            "No local road-speed calibration report. Follow the documented calibration workflow."
+        )
+    st.download_button(
+        "Rider acceptance data template",
+        "group_id,price_cad,accepted,offered\n",
+        "rider-acceptance-template.csv",
+        "text/csv",
+    )
+    st.caption(
+        "Groups must keep related studies/sites/dates together. The rider fitting command reports "
+        "holdout performance; synthetic recovery tests are not empirical validation."
+    )
     st.subheader("Data and validation evidence")
     st.write(
         "Roads: OpenStreetMap when loaded. Demand: synthetic. Behavior: "
         "assumed. Traffic does not respond to the simulated fleet."
     )
     st.json(toronto_boundary_geojson()["metadata"], expanded=False)
-    for name in ("PUBLIC_DATA_REPORT.md", "RELEASE_READINESS.md"):
+    for name in (
+        "DAILY_RESULTS.md",
+        "CALIBRATION.md",
+        "PUBLIC_DATA_REPORT.md",
+        "RELEASE_READINESS.md",
+    ):
         path = ROOT / "docs" / name
         if path.exists():
             with st.expander(name.replace("_", " ").removesuffix(".md").title()):

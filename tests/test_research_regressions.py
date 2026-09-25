@@ -187,7 +187,7 @@ def test_fares_never_pay_rider_for_trip():
         ("simulation", "fleet_size", -1),
         ("simulation", "demand_multiplier", float("nan")),
         ("policy", "reposition_acceptance", 1.1),
-        ("simulation", "end_time", "04:00"),
+        ("simulation", "end_time", "25:00"),
         ("policy", "subsidy_budget_cad", -1),
     ],
 )
@@ -209,9 +209,9 @@ def test_ui_factory_and_cli_have_identical_inputs_and_metrics():
 
 
 def test_shared_behavior_and_event_draws():
-    from toronto_rideshare.policies.registry import PolicyId
+    from toronto_rideshare.policies.registry import ACTIVE_POLICIES
 
-    engines = [create_engine({}, policy_id=p) for p in PolicyId if p != PolicyId.ADAPTIVE]
+    engines = [create_engine({}, policy_id=p) for p in ACTIVE_POLICIES]
     assert all(e.behavior == engines[0].behavior for e in engines)
     assert engines[0]._draw("offer", "R1", "D1", 420) == engines[-1]._draw("offer", "R1", "D1", 420)
     assert engines[0].trips == engines[-1].trips
@@ -221,7 +221,7 @@ def test_shared_behavior_and_event_draws():
 def test_single_seed_uncertainty_and_explicit_p0():
     from toronto_rideshare.policies.registry import PolicyId
 
-    result = run_repeated_policy_comparison({}, policies=(PolicyId.P1,), n_replicates=1)
+    result = run_repeated_policy_comparison({}, policies=(PolicyId.P5,), n_replicates=1)
     assert result["reference_policy"] == PolicyId.P0
     assert len(result["replicates"]) == 2
     assert result["aggregates"][0]["metrics"]["service_rate"]["ci95_low"] is None
@@ -284,7 +284,15 @@ def test_timestamp_timezone_dst_and_nonfinite_speed():
 
 @pytest.mark.parametrize("fleet,requests", [(0, 0), (0, 10), (10, 0)])
 def test_empty_populations_reconcile(fleet, requests):
-    engine = create_engine({"simulation": {"fleet_size": fleet, "base_trip_count": requests}})
+    engine = create_engine(
+        {
+            "simulation": {
+                "fleet_size": fleet,
+                "base_trip_count": requests,
+                "request_probability": 1.0,
+            }
+        }
+    )
     engine.run()
     m = engine.last_snapshot["metrics"]
     assert m["completed_trips"] + m["in_progress_trips"] + m["unserved_trips"] == requests

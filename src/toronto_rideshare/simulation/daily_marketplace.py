@@ -4,6 +4,7 @@ from dataclasses import asdict
 
 import networkx as nx
 
+from toronto_rideshare.demand.profiles import REGIONS, region_for_zone
 from toronto_rideshare.marketplace.decisions import (
     choose_request,
     driver_choice_probabilities,
@@ -222,6 +223,20 @@ def step_daily(engine):
         engine.metrics.total_offers += 1
         if chosen is None:
             engine.metrics.rejected_offers += 1
+            events.append(
+                {
+                    "type": "offer_rejected",
+                    "decision_scope": "menu",
+                    "request_id": "No request chosen",
+                    "driver_id": driver.driver_id,
+                    "origin": [driver.lat, driver.lon],
+                    "destination": [driver.lat, driver.lon],
+                    "probability": 1 - probs[None],
+                    "draw": draw,
+                    "reason": "Driver chose to stay idle",
+                    "location_kind": "driver_location",
+                }
+            )
             continue
         trip = requests[chosen]
         pickup, occupied = routes[chosen]
@@ -290,11 +305,17 @@ def step_daily(engine):
     engine.last_snapshot = engine.snapshot(events)
     engine.last_snapshot["quotes"] = {ident: asdict(q) for ident, q in engine.quotes.items()}
     engine.last_snapshot["committed_subsidy_cad"] = committed_subsidy(engine)
+    regional = {region: {"demand": 0, "supply": 0, "imbalance": 0} for region in REGIONS}
+    for zone, counts in engine.last_snapshot["zone_state"].items():
+        region = region_for_zone(zone)
+        for key in ("demand", "supply", "imbalance"):
+            regional[region][key] += counts[key]
     engine.history.append(
         {
             "time_min": now,
             **asdict(engine.metrics),
             "zone_state": engine.last_snapshot["zone_state"],
+            "regional_state": regional,
         }
     )
     return engine.last_snapshot

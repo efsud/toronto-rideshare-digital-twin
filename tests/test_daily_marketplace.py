@@ -80,3 +80,24 @@ def test_three_policies_have_identical_requests_fleet_and_behavior():
         assert e.acceptance == reference.acceptance
         assert e._draw("rider_quote", "R42") == reference._draw("rider_quote", "R42")
         assert e._draw("driver_choice", 60, "D1") == reference._draw("driver_choice", 60, "D1")
+
+
+def test_idle_choice_has_truthful_driver_location_overlay():
+    e = small_engine()
+    e._draw = lambda kind, *args: 0.0 if kind == "driver_choice" else 0.5
+    snapshot = e.step()
+    rejections = snapshot["rejected_offers"]
+    assert rejections
+    assert rejections[0]["decision_scope"] == "menu"
+    assert rejections[0]["location_kind"] == "driver_location"
+    assert rejections[0]["origin"] == [e.drivers[0].lat, e.drivers[0].lon]
+    assert not snapshot["accepted_offers"]
+
+
+def test_default_config_matches_daily_workspace():
+    from toronto_rideshare.scenario import ScenarioConfig
+
+    assert (
+        ScenarioConfig.from_source({}).as_dict()
+        == ScenarioConfig.from_source("configs/experiments/full_day.yaml").as_dict()
+    )

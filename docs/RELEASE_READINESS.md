@@ -1,32 +1,31 @@
-# Release readiness — v0.5 research prototype
+# Daily marketplace readiness — v0.6 development
 
-Prepared September 24, 2026. The implementation is reviewable; it is not a blanket validated-platform release. Draft PR #1 remains the delivery vehicle. Merging and hosting are separate actions.
+Updated September 25, 2026. This is a reviewable research prototype; merging and public hosting are separate release actions. Current tests pass locally; final remote CI status is reported on draft PR #1.
 
-| Area | Evidence | Status / remaining work |
-|---|---|---|
-| Unified scenario | Same factory in dashboard and runner; input rejection and parity tests | Implemented |
-| Model correctness | Traffic parsing, assignment reservations, empty validation rejection, horizon and elapsed utilization regressions | Implemented |
-| Geography/routing | Constrained sampling, clipped zones, active-leg geometry, strict no-path behavior, immutable costs | Implemented |
-| Policies/experiments | Shared/keyed behavior, reserved subsidy accounting, capacity-aware reposition, P0 paired Student-t comparisons | Implemented |
-| Workspace | Four guided views, pending/apply/reset, labels, map legend, symbols, table alternative and JSON exports | Implemented; formative usability pending |
-| Software checks | 87 tests passed; 84% core-package statement coverage; Ruff passed | Local Python environment; CI checked separately on PR |
-| Actual browser | Chrome at 1440 px and 390 px, no page errors or horizontal overflow in reviewed flows | Visual review, not WCAG conformance certification |
-| Public speeds | 42,281 usable rows; site holdout; matched speed MAE 6.792 km/h | Compared with observed data; no pass threshold |
-| Human understanding | Five-task protocol and results template provided | No participants tested; required before usability sign-off |
-| Deployment | Local Streamlit available | Public hosting out of scope |
+| Requirement | Evidence |
+|---|---|
+| Legend and meaningful map | Persistent boundary/zone/agent/route legend; separate demand/supply counts, shortage and quote means; searchable text table; Chrome visual review |
+| At least one day | Default 00:00–24:00 scenario; horizon test; full-day button and actual browser completion |
+| Requests | Independent potential-request probability; daily arrival/OD regimes; deterministic thinning tests |
+| Rider/driver price proposals | Immutable trip quote, subsidy cap before rider response, distinct rider payment and driver gross pay; inspectable events |
+| Rider price response | Shared total-price logistic response and keyed draws; acceptance/rejection events |
+| Driver request choice | Multinomial menu choice with idle outside option; rotating keyed priority; unique assignment tests |
+| Adaptive OD mechanism | Destination-minus-origin shortage incentives; morning/evening synthetic flow reversal; controlled same-route reversal evidence |
+| At most three active policies | P0, P5 and adaptive OD in dashboard/default daily comparisons; historical configurations remain readable |
+| KPI and temporal comparison | Current heatmaps, regional demand/supply curves, hourly policy trajectories, paired effects and intervals |
+| Common assumptions | Exact input/fleet/behavior/draw parity tests; 30 paired seeds, 90 complete-day runs |
+| Calibration | Public-speed parameter fit with site holdout and checksum-verified application; rider-response fitting workflow with synthetic recovery tests; unsupported behavior/demand explicitly assumed |
 
-## Performance and reproducibility
+The core software suite has 104 passing tests (85% core-package coverage). The 90-run experiment reconciles all request states, utilization and payment identities. Full-day integration checks conserve settled plus committed subsidies at every step. Chrome review covers desktop/narrow layouts and actual daily completion, comparison charts and calibration panel. A full-day five-driver network check also uses the fitted profile without straight-line fallback; this is integration evidence, not a supported-scale benchmark.
 
-The demo benchmark ran 20/100/200 drivers with matching request counts in approximately 0.20/0.47/1.04 seconds on this machine; peak traced Python allocations were approximately 3.43/2.80/3.06 MB. These are neither total RSS nor network-mode performance limits. A 30-seed, eight-policy demo comparison (240 runs) took about 25 seconds. Evidence includes all paired estimates; no winning policy is declared. Full manifests remain in the local generated results; committed summaries preserve the scenario, seeds and source file checksum.
+The policy experiment uses illustrative demo routing, not the calibrated network. Under its assumptions, adaptive pricing increases platform contribution while reducing completed service; P5 reduces realized pickup wait. Read `DAILY_RESULTS.md` for exact effects and uncertainty. No winner is declared.
 
-A full-Toronto five-driver network smoke run took about 19.6 seconds including loading/preparation. Larger network scenarios need dedicated runtime and total-memory profiling before a supported-scale claim. The graph is about 73,000 directed edges and most speed costs are imputed.
+## Remaining research and release limits
 
-## Explicit release gaps
+- Road calibration targets approximate spot-speed bins in a bounded nonrepresentative sample. No predeclared benchmark or independent measured trip-time validation exists. Demand, acceptance coefficients, initial fleet and commercial fares remain assumptions.
+- Five representative humans have not completed the formative usability protocol. Automated browser review does not replace that study, screen-reader review or a WCAG conformance audit.
+- Larger network scenarios require process-memory/runtime profiling before any supported-scale claim. Demo speed does not establish network scalability.
+- Congestion is external, positions move at endpoints, and driver work shifts are absent. Synthetic scenario regions are not official neighborhoods. Sequential choice is an approximation to competing-driver decisions.
+- Legacy outputs describe different behavioral and accounting models. Preserve their manifests and never pool them silently with the daily marketplace.
 
-1. Conduct the five-participant study in `USABILITY_PROTOCOL.md`, revise observed failures and retest. No simulated user findings have been invented.
-2. Complete keyboard/screen-reader and contrast review against WCAG 2.2, especially WebGL selection. The searchable table and select box provide text alternatives but do not establish conformance.
-3. Expand representative public sampling and establish documented empirical acceptance criteria. Validate trip times separately from spot speeds.
-4. Obtain appropriate empirical demand and behavioral observations before claiming a calibrated marketplace. Present gross earnings and contribution as assumed-model outputs.
-5. Profile 20/100/200-driver network scenarios and process RSS before expanding network support; demo results cannot establish network scalability.
-
-Legacy documents and DOCX describe older development stages and remain historical. The model handbook, public report and resolved manifests govern this release's interpretation. The legacy behavior preset retains earlier behavioral differences only, not old defects. Review solver fallback metadata and avoid combining model versions silently.
+Public hosting, merging, SUMO, pooled trips and reinforcement learning are outside this release. The user requested public data where suitable and explicit assumptions where no suitable data are available; this distinction is maintained throughout the model and calibration views.

@@ -1,13 +1,16 @@
 """Portable run evidence, independent of dashboard presentation."""
 
 import hashlib
+import json
 import subprocess
 from pathlib import Path
 
 from toronto_rideshare.scenario import stream_seed
 
 METRIC_DEFINITIONS = {
-    "service_rate": "Completed by horizon / arrived potential requests",
+    "service_rate": (
+        "Completed / arrived requests including price declines; excludes unrequested opportunities"
+    ),
     "mean_wait_min": "Request-to-pickup minutes, riders actually collected only",
     "utilization_rate": "Elapsed pickup + occupied minutes / fleet minutes; excludes repositioning",
     "total_driver_earnings_cad": "Gross earnings; excludes vehicle expenses",
@@ -45,7 +48,28 @@ def run_manifest(config, engine):
     )
     network = config["network"]
     seed = config["project"]["random_seed"]
+    calibration = {"status": "not_evaluated"}
+    sidecar = Path(network["traffic_profile_path"]).with_suffix(".calibration.json")
+    if engine.routing and sidecar.exists():
+        try:
+            evidence = json.loads(sidecar.read_text())
+            if not isinstance(evidence, dict):
+                raise ValueError("Expected a calibration mapping")
+            matches = evidence.get("profile_sha256") == file_checksum(
+                network["traffic_profile_path"]
+            ) and evidence.get("provenance", {}).get("graph_sha256") == file_checksum(
+                network["graph_path"]
+            )
+            calibration = {
+                "status": evidence.get("status") if matches else "checksum_mismatch",
+                "scope": evidence.get("scope"),
+                "report_sha256": file_checksum(sidecar),
+                "parameters": evidence.get("fit") if matches else None,
+            }
+        except (ValueError, OSError):
+            calibration = {"status": "invalid_calibration_sidecar"}
     return {
+        "road_speed_calibration": calibration,
         "schema_version": 2,
         "model_version": "0.6.0.dev0",
         "commit": git.stdout.strip() or None,
@@ -77,7 +101,12 @@ def run_manifest(config, engine):
             else "uniform clipped H3 cells"
         ),
         "routing_mode_counts": engine.metrics.routing_mode_counts,
-        "metric_definitions": METRIC_DEFINITIONS,
+        "metric_definitions": {
+            **METRIC_DEFINITIONS,
+            "acceptance_rate": "Chosen trips / driver menu decisions (including idle choices)"
+            if engine.marketplace_model == "driver_choice"
+            else "Accepted offers / evaluated offers",
+        },
         "data_status": {
             "demand": "synthetic " + config["simulation"]["demand_profile"],
             "behavior": "assumed",

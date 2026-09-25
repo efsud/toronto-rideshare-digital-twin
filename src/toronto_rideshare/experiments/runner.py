@@ -238,9 +238,35 @@ def run_experiment(
         "matching_backend": engine.last_snapshot["matching_backend"],
         "routing_mode_share": routing_mode_share,
         "zone_state": engine.last_snapshot["zone_state"],
-        "policy_objective": settings.objective,
-        "policy_strategy": settings.strategy,
+        "policy_objective": (
+            "Evaluate service, waiting and contribution under shared request and choice assumptions"
+            if engine.marketplace_model == "driver_choice"
+            else settings.objective
+        ),
+        "policy_strategy": (
+            "Firm quotes and sequential driver menu choice; "
+            + (
+                "origin–destination shortage pricing"
+                if settings.use_od_pricing
+                else "fixed pricing with idle repositioning"
+                if settings.use_repositioning
+                else "fixed-price reference"
+            )
+            if engine.marketplace_model == "driver_choice"
+            else settings.strategy
+        ),
         "policy_assumptions": {
+            "shared_behavior": config["behavior"],
+            "driver_choice": asdict(engine.acceptance),
+            "reposition_acceptance": behavior.reposition_acceptance,
+            "rider_max_wait_minutes": engine.max_wait_time_min,
+            "price_gains": {
+                key: policy_cfg[key]
+                for key in ("od_origin_gain", "od_transfer_gain", "od_discount_gain")
+            },
+        }
+        if engine.marketplace_model == "driver_choice"
+        else {
             "behavior_enabled": engine.behavior is not None,
             "rider_price_elasticity": behavior.rider_price_elasticity,
             "driver_bonus_elasticity": behavior.driver_bonus_elasticity,

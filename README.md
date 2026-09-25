@@ -1,15 +1,21 @@
-# Toronto Ride-Hailing Research Platform
+# Toronto Daily Ride-Hailing Research Platform
 
-A guided Python/Streamlit research prototype for comparing matching, pricing, driver bonuses and repositioning on Toronto geography. **v0.5 uses synthetic demand and assumed behavior; it is not a calibrated Toronto marketplace forecast.**
-
-Start with [the model handbook](docs/MODEL_HANDBOOK.md), [reproduction commands](docs/REPRODUCE.md), [public-data evaluation](docs/PUBLIC_DATA_REPORT.md) and [release readiness](docs/RELEASE_READINESS.md). The handbook explains every policy, parameter, map mark and metric. The dashboard contains four views: setup, simulation, comparison and model understanding.
+A guided Python/Streamlit prototype for a **24-hour marketplace** with three policies: **P0 fixed-price baseline, P5 repositioning, and adaptive origin–destination pricing**. Riders receive firm quotes and accept probabilistically; drivers choose among competing requests or stay idle. Dynamic synthetic demand changes the geography of requests through the day.
 
 ```sh
 pip install -e '.[all]'
 streamlit run dashboard/app.py
 ```
 
-Default demo runs offline. Network research requires an OSM graph and excludes unreachable assignments. Apply scenario changes explicitly to start a fresh run. Use 30 paired seeds for research comparisons; three are only a preview.
+The default day runs offline with illustrative travel estimates. A road-network mode supports a separately fitted public-speed profile. Demand and rider/driver preferences remain explicitly assumed. The platform is not a calibrated forecast of Toronto ride-hailing operations.
+
+- [Daily model, policies, equations and map guide](docs/DAILY_MARKETPLACE.md)
+- [30-seed policy effects and adaptation check](docs/DAILY_RESULTS.md)
+- [Calibration workflow and public-data evidence](docs/CALIBRATION.md)
+- [Reproduction commands](docs/REPRODUCE.md)
+- [Release-readiness evidence and remaining limits](docs/RELEASE_READINESS.md)
+
+The workspace provides setup, simulation, policy comparison and model-understanding views. Apply scenario changes explicitly to start a new run. Map legends, region trajectories, decision menus and exported manifests explain the results. Use 30 paired seeds for research comparisons; three is a preview. A policy number does not indicate quality: current experiments show service/revenue tradeoffs.
 
 <details><summary>Earlier project documentation (historical v0.4 context)</summary>
 

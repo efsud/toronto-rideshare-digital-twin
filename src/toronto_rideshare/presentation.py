@@ -48,6 +48,7 @@ LEGEND = (
     *STATE_NAMES.values(),
     "Accepted offer — latest step",
     "Rejected offer — latest step",
+    "Driver chose to stay idle — latest step",
     "Road-network route",
     "Straight-line estimate — illustrative",
 )
@@ -159,7 +160,15 @@ def map_entities(snapshot):
             )
     for index, event in enumerate(snapshot["offers"]):
         accepted = event["type"] == "offer_accepted"
-        label = "Accepted offer — latest step" if accepted else "Rejected offer — latest step"
+        label = (
+            "Accepted offer — latest step"
+            if accepted
+            else (
+                "Driver chose to stay idle — latest step"
+                if event.get("decision_scope") == "menu"
+                else "Rejected offer — latest step"
+            )
+        )
         rows.append(
             {
                 "entity_id": f"offer:{index}",

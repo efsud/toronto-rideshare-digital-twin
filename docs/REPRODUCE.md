@@ -34,3 +34,14 @@ result = run_experiment({
 ```
 
 Export run evidence and comparison manifests from the UI. Large downloaded graphs and raw data are ignored by Git. Reviewed small reports are under `docs/evidence`. Runtime numbers depend on machine, caches and optional solver availability. Python traced allocations are not total process RSS. All changes are reviewable in draft PR #1; merging and hosting require separate release actions.
+
+## Daily marketplace and calibration (v0.6 development)
+
+The dashboard now defaults to `configs/experiments/full_day.yaml`: 00:00–24:00, three policies and shared driver choice. The earlier baseline YAML remains a legacy scenario. Reproduce the current evidence with:
+
+```sh
+python scripts/validate_daily_research.py
+python scripts/calibrate_public_speeds.py
+```
+
+The first command executes 90 full-day runs (three policies × 30 paired seeds) and verifies a controlled shortage reversal. The second fits road-speed parameters on training sites and evaluates a separate site holdout, producing a deployable network profile. Raw data/graph prerequisites are listed above. Apply the profile using the Calibration panel after reviewing its scope. Behavioral fitting schema and commands are in `CALIBRATION.md`. Public speeds cannot calibrate driver preferences or ride demand.

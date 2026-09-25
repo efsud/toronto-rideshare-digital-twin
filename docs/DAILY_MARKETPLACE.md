@@ -62,4 +62,19 @@ Compare paired seeds against P0, with the same requests, fleet, response coeffic
 
 ## Limits and calibration status
 
-Traffic is external; simulated vehicles do not cause congestion. Travel costs are fixed within each departure-bucket leg. Demo uses straight-line speeds; network research excludes unreachable assignments. The public-data report concerns observed spot-speed bins only. It does not calibrate passenger arrivals, price elasticity, driver preferences or actual commercial fares. Suitable public data will be used where it supports the measurement; unsupported parameters remain labeled assumptions. The calibration workflow and empirical holdout reporting are still being extended for this daily release.
+Traffic is external; simulated vehicles do not cause congestion. Travel costs are fixed within each departure-bucket leg. Demo uses straight-line speeds; network research excludes unreachable assignments. The public-data report concerns observed spot-speed bins only. It does not calibrate passenger arrivals, price elasticity, driver preferences or actual commercial fares. Suitable public data will be used where it supports the measurement; unsupported parameters remain labeled assumptions. The road-speed parameter fit and rider-response fitting workflow are documented in CALIBRATION.md. Full-day paired outcomes and their limitations are in DAILY_RESULTS.md.
+
+## Shared tunable behavioral parameters
+
+| Parameter | Default | Units / supported range | Evidence |
+|---|---:|---|---|
+| Request probability | 0.8 | Probability [0,1] per potential opportunity | Assumed |
+| Rider acceptance intercept | 2.0 | Finite logit intercept | Assumed; fitting workflow available |
+| Rider total-price coefficient | 0.08 | Per CAD, nonnegative | Assumed; fitting workflow available |
+| Driver choice intercept | 0.5 | Finite utility intercept relative to idle | Assumed |
+| Driver gross-pay coefficient | 0.10 | Per CAD, nonnegative | Assumed |
+| Pickup burden coefficient | 0.18 | Per minute, nonnegative | Assumed |
+| Occupied-time burden coefficient | 0.02 | Per minute, nonnegative | Assumed |
+| Reposition acceptance | 0.7 | Probability [0,1] | Assumed; applies when repositioning is offered |
+
+Changing these values applies the same response model to all active policies. Policy gains are separate design variables: origin price gain 0.5, destination-transfer bonus gain 1.0 and transfer-discount gain 0.5, all nonnegative. The maximum rider adjustment is CAD 5, maximum bonus CAD 12, and total subsidy budget CAD 500. These bounds apply before quotes are accepted. The service-rate denominator is actual requests arriving by the horizon, including price declines; potential opportunities that never request a ride are not in that denominator.

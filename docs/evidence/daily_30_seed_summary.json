@@ -1,0 +1,734 @@
+{
+  "timestamp": "2026-09-25T20:10:52.309179+00:00",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+  ],
+  "common_random_numbers": true,
+  "reference_policy": "P0_fixed_baseline",
+  "interval_method": "paired Student-t; unavailable for one replicate",
+  "aggregates": [
+    {
+      "policy_id": "P0_fixed_baseline",
+      "metrics": {
+        "completed_trips": {
+          "mean": 430.1,
+          "ci95_low": 424.2925296227932,
+          "ci95_high": 435.90747037720683
+        },
+        "service_rate": {
+          "mean": 0.4494429994403871,
+          "ci95_low": 0.44349591983499015,
+          "ci95_high": 0.4553900790457841
+        },
+        "unserved_trips": {
+          "mean": 518.7666666666667,
+          "ci95_low": 512.1581213113033,
+          "ci95_high": 525.37521202203
+        },
+        "mean_wait_min": {
+          "mean": 15.480071455505843,
+          "ci95_low": 15.293055783332123,
+          "ci95_high": 15.667087127679563
+        },
+        "p95_wait_min": {
+          "mean": 32.65682572830689,
+          "ci95_low": 32.17784710050047,
+          "ci95_high": 33.13580435611331
+        },
+        "mean_pickup_time_min": {
+          "mean": 12.733442191811656,
+          "ci95_low": 12.560335624785445,
+          "ci95_high": 12.906548758837868
+        },
+        "mean_trip_time_min": {
+          "mean": 22.104168707651027,
+          "ci95_low": 21.870723517460934,
+          "ci95_high": 22.33761389784112
+        },
+        "in_progress_trips": {
+          "mean": 8.166666666666666,
+          "ci95_low": 7.21550618547226,
+          "ci95_high": 9.117827147861073
+        },
+        "cancelled_trips": {
+          "mean": 4.0,
+          "ci95_low": 2.9257927652503506,
+          "ci95_high": 5.074207234749649
+        },
+        "waiting_trips": {
+          "mean": 0.03333333333333333,
+          "ci95_low": -0.034840988071090116,
+          "ci95_high": 0.10150765473775678
+        },
+        "price_declined_trips": {
+          "mean": 514.7333333333333,
+          "ci95_low": 508.0565690988264,
+          "ci95_high": 521.4100975678404
+        },
+        "elapsed_reposition_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "acceptance_rate": {
+          "mean": 0.12606191945619413,
+          "ci95_low": 0.12193806838369253,
+          "ci95_high": 0.13018577052869573
+        },
+        "rider_payment_cad": {
+          "mean": 9247.733847236335,
+          "ci95_low": 9122.744347830352,
+          "ci95_high": 9372.723346642319
+        },
+        "driver_earnings_cad": {
+          "mean": 6935.800385427251,
+          "ci95_low": 6842.058260872764,
+          "ci95_high": 7029.5425099817385
+        },
+        "subsidy_spend_cad": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "platform_net_revenue_cad": {
+          "mean": 2311.9334618090843,
+          "ci95_low": 2280.686086957589,
+          "ci95_high": 2343.1808366605796
+        },
+        "reposition_events": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "utilization_rate": {
+          "mean": 0.17526390180145301,
+          "ci95_low": 0.17247915031935102,
+          "ci95_high": 0.17804865328355501
+        }
+      },
+      "paired_delta_vs_p0": {
+        "completed_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "service_rate": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "unserved_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "mean_wait_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "p95_wait_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "mean_pickup_time_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "mean_trip_time_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "in_progress_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "cancelled_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "waiting_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "price_declined_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "elapsed_reposition_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "acceptance_rate": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "rider_payment_cad": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "driver_earnings_cad": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "subsidy_spend_cad": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "platform_net_revenue_cad": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "reposition_events": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "utilization_rate": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        }
+      },
+      "policy_strategy": "Firm quotes and sequential driver menu choice; fixed-price reference",
+      "policy_objective": "Evaluate service, waiting and contribution under shared request and choice assumptions"
+    },
+    {
+      "policy_id": "P5_repositioning",
+      "metrics": {
+        "completed_trips": {
+          "mean": 429.4,
+          "ci95_low": 423.3490563428031,
+          "ci95_high": 435.45094365719683
+        },
+        "service_rate": {
+          "mean": 0.44870387082553476,
+          "ci95_low": 0.4425751801395881,
+          "ci95_high": 0.45483256151148144
+        },
+        "unserved_trips": {
+          "mean": 519.8333333333334,
+          "ci95_low": 513.217952603052,
+          "ci95_high": 526.4487140636147
+        },
+        "mean_wait_min": {
+          "mean": 15.125686372814073,
+          "ci95_low": 14.957136227881673,
+          "ci95_high": 15.294236517746473
+        },
+        "p95_wait_min": {
+          "mean": 32.26002960529868,
+          "ci95_low": 31.792508078728915,
+          "ci95_high": 32.72755113186845
+        },
+        "mean_pickup_time_min": {
+          "mean": 12.403221294142723,
+          "ci95_low": 12.248377014942584,
+          "ci95_high": 12.558065573342862
+        },
+        "mean_trip_time_min": {
+          "mean": 22.105527802208904,
+          "ci95_low": 21.869600047523967,
+          "ci95_high": 22.34145555689384
+        },
+        "in_progress_trips": {
+          "mean": 7.8,
+          "ci95_low": 6.92620873037299,
+          "ci95_high": 8.67379126962701
+        },
+        "cancelled_trips": {
+          "mean": 5.066666666666666,
+          "ci95_low": 4.1419051783857865,
+          "ci95_high": 5.991428154947546
+        },
+        "waiting_trips": {
+          "mean": 0.03333333333333333,
+          "ci95_low": -0.034840988071090116,
+          "ci95_high": 0.10150765473775678
+        },
+        "price_declined_trips": {
+          "mean": 514.7333333333333,
+          "ci95_low": 508.0565690988264,
+          "ci95_high": 521.4100975678404
+        },
+        "elapsed_reposition_min": {
+          "mean": 685.6705364588322,
+          "ci95_low": 583.6494531931148,
+          "ci95_high": 787.6916197245496
+        },
+        "acceptance_rate": {
+          "mean": 0.13006214400065141,
+          "ci95_low": 0.1259503914164778,
+          "ci95_high": 0.13417389658482504
+        },
+        "rider_payment_cad": {
+          "mean": 9232.936962474228,
+          "ci95_low": 9102.566888489144,
+          "ci95_high": 9363.307036459313
+        },
+        "driver_earnings_cad": {
+          "mean": 6924.7027218556705,
+          "ci95_low": 6826.925166366857,
+          "ci95_high": 7022.4802773444835
+        },
+        "subsidy_spend_cad": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "platform_net_revenue_cad": {
+          "mean": 2308.2342406185576,
+          "ci95_low": 2275.641722122287,
+          "ci95_high": 2340.8267591148283
+        },
+        "reposition_events": {
+          "mean": 34.666666666666664,
+          "ci95_low": 30.500120959039446,
+          "ci95_high": 38.833212374293886
+        },
+        "utilization_rate": {
+          "mean": 0.1732896694556532,
+          "ci95_low": 0.1705194268035061,
+          "ci95_high": 0.17605991210780028
+        }
+      },
+      "paired_delta_vs_p0": {
+        "completed_trips": {
+          "mean": -0.7,
+          "ci95_low": -1.7197899128490262,
+          "ci95_high": 0.31978991284902625
+        },
+        "service_rate": {
+          "mean": -0.0007391286148523376,
+          "ci95_low": -0.0018059597970008121,
+          "ci95_high": 0.00032770256729613696
+        },
+        "unserved_trips": {
+          "mean": 1.0666666666666667,
+          "ci95_low": 0.14190517838578676,
+          "ci95_high": 1.9914281549475465
+        },
+        "mean_wait_min": {
+          "mean": -0.35438508269177066,
+          "ci95_low": -0.4902360026408124,
+          "ci95_high": -0.2185341627427289
+        },
+        "p95_wait_min": {
+          "mean": -0.39679612300820455,
+          "ci95_low": -0.9716711702379984,
+          "ci95_high": 0.17807892422158933
+        },
+        "mean_pickup_time_min": {
+          "mean": -0.33022089766893375,
+          "ci95_low": -0.45611879865135085,
+          "ci95_high": -0.20432299668651666
+        },
+        "mean_trip_time_min": {
+          "mean": 0.0013590945578772088,
+          "ci95_low": -0.029789592721371425,
+          "ci95_high": 0.03250778183712584
+        },
+        "in_progress_trips": {
+          "mean": -0.36666666666666664,
+          "ci95_low": -0.8518799957670236,
+          "ci95_high": 0.11854666243369022
+        },
+        "cancelled_trips": {
+          "mean": 1.0666666666666667,
+          "ci95_low": 0.1682771292676899,
+          "ci95_high": 1.9650562040656434
+        },
+        "waiting_trips": {
+          "mean": 0.0,
+          "ci95_low": -0.09806125565127168,
+          "ci95_high": 0.09806125565127168
+        },
+        "price_declined_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "elapsed_reposition_min": {
+          "mean": 685.6705364588322,
+          "ci95_low": 583.6494531931148,
+          "ci95_high": 787.6916197245496
+        },
+        "acceptance_rate": {
+          "mean": 0.004000224544457287,
+          "ci95_low": -8.40709208332728e-06,
+          "ci95_high": 0.0080088561809979
+        },
+        "rider_payment_cad": {
+          "mean": -14.796884762107037,
+          "ci95_low": -38.62235712409097,
+          "ci95_high": 9.028587599876893
+        },
+        "driver_earnings_cad": {
+          "mean": -11.097663571580627,
+          "ci95_low": -28.966767843068467,
+          "ci95_high": 6.771440699907211
+        },
+        "subsidy_spend_cad": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "platform_net_revenue_cad": {
+          "mean": -3.6992211905264107,
+          "ci95_low": -9.655589281022502,
+          "ci95_high": 2.257146899969681
+        },
+        "reposition_events": {
+          "mean": 34.666666666666664,
+          "ci95_low": 30.500120959039446,
+          "ci95_high": 38.833212374293886
+        },
+        "utilization_rate": {
+          "mean": -0.0019742323457998313,
+          "ci95_low": -0.00273480659938726,
+          "ci95_high": -0.0012136580922124025
+        }
+      },
+      "policy_strategy": "Firm quotes and sequential driver menu choice; fixed pricing with idle repositioning",
+      "policy_objective": "Evaluate service, waiting and contribution under shared request and choice assumptions"
+    },
+    {
+      "policy_id": "adaptive_od",
+      "metrics": {
+        "completed_trips": {
+          "mean": 422.56666666666666,
+          "ci95_low": 416.6206576534648,
+          "ci95_high": 428.51267567986855
+        },
+        "service_rate": {
+          "mean": 0.4415457695130178,
+          "ci95_low": 0.43572389293647695,
+          "ci95_high": 0.4473676460895587
+        },
+        "unserved_trips": {
+          "mean": 526.5666666666667,
+          "ci95_low": 520.2672835522629,
+          "ci95_high": 532.8660497810705
+        },
+        "mean_wait_min": {
+          "mean": 15.441694683539232,
+          "ci95_low": 15.260498332819738,
+          "ci95_high": 15.622891034258727
+        },
+        "p95_wait_min": {
+          "mean": 32.736022885813135,
+          "ci95_low": 32.26487859587531,
+          "ci95_high": 33.20716717575096
+        },
+        "mean_pickup_time_min": {
+          "mean": 12.71321532585207,
+          "ci95_low": 12.543065985001565,
+          "ci95_high": 12.883364666702576
+        },
+        "mean_trip_time_min": {
+          "mean": 22.03614820319435,
+          "ci95_low": 21.79751557281673,
+          "ci95_high": 22.27478083357197
+        },
+        "in_progress_trips": {
+          "mean": 7.9,
+          "ci95_low": 7.065902695506058,
+          "ci95_high": 8.734097304493941
+        },
+        "cancelled_trips": {
+          "mean": 3.933333333333333,
+          "ci95_low": 2.658788473785505,
+          "ci95_high": 5.207878192881161
+        },
+        "waiting_trips": {
+          "mean": 0.03333333333333333,
+          "ci95_low": -0.034840988071090116,
+          "ci95_high": 0.10150765473775678
+        },
+        "price_declined_trips": {
+          "mean": 522.6,
+          "ci95_low": 515.9900603331453,
+          "ci95_high": 529.2099396668548
+        },
+        "elapsed_reposition_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "acceptance_rate": {
+          "mean": 0.12617274848740287,
+          "ci95_low": 0.12160432282330348,
+          "ci95_high": 0.13074117415150227
+        },
+        "rider_payment_cad": {
+          "mean": 9252.335767790122,
+          "ci95_low": 9119.664030039225,
+          "ci95_high": 9385.00750554102
+        },
+        "driver_earnings_cad": {
+          "mean": 6802.622659175924,
+          "ci95_low": 6705.161933327929,
+          "ci95_high": 6900.08338502392
+        },
+        "subsidy_spend_cad": {
+          "mean": 11.066666666666666,
+          "ci95_low": 9.42744926542936,
+          "ci95_high": 12.705884067903973
+        },
+        "platform_net_revenue_cad": {
+          "mean": 2449.7131086141976,
+          "ci95_low": 2414.404017950728,
+          "ci95_high": 2485.0221992776674
+        },
+        "reposition_events": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "utilization_rate": {
+          "mean": 0.1717465079772648,
+          "ci95_low": 0.16888472891657416,
+          "ci95_high": 0.17460828703795542
+        }
+      },
+      "paired_delta_vs_p0": {
+        "completed_trips": {
+          "mean": -7.533333333333333,
+          "ci95_low": -8.876927611516294,
+          "ci95_high": -6.1897390551503735
+        },
+        "service_rate": {
+          "mean": -0.0078972299273693,
+          "ci95_low": -0.009317425251985662,
+          "ci95_high": -0.006477034602752937
+        },
+        "unserved_trips": {
+          "mean": 7.8,
+          "ci95_low": 6.538854476744206,
+          "ci95_high": 9.061145523255794
+        },
+        "mean_wait_min": {
+          "mean": -0.038376771966611635,
+          "ci95_low": -0.1907085284910116,
+          "ci95_high": 0.11395498455778835
+        },
+        "p95_wait_min": {
+          "mean": 0.07919715750624394,
+          "ci95_low": -0.43088267387302187,
+          "ci95_high": 0.5892769888855097
+        },
+        "mean_pickup_time_min": {
+          "mean": -0.02022686595958613,
+          "ci95_low": -0.16556774511104577,
+          "ci95_high": 0.12511401319187349
+        },
+        "mean_trip_time_min": {
+          "mean": -0.06802050445667582,
+          "ci95_low": -0.09779254526695369,
+          "ci95_high": -0.03824846364639795
+        },
+        "in_progress_trips": {
+          "mean": -0.26666666666666666,
+          "ci95_low": -0.7463990601046167,
+          "ci95_high": 0.21306572677128327
+        },
+        "cancelled_trips": {
+          "mean": -0.06666666666666667,
+          "ci95_low": -0.7665062450924038,
+          "ci95_high": 0.6331729117590705
+        },
+        "waiting_trips": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "price_declined_trips": {
+          "mean": 7.866666666666666,
+          "ci95_low": 6.892284448625651,
+          "ci95_high": 8.841048884707682
+        },
+        "elapsed_reposition_min": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "acceptance_rate": {
+          "mean": 0.00011082903120874001,
+          "ci95_low": -0.0018233264805006916,
+          "ci95_high": 0.0020449845429181715
+        },
+        "rider_payment_cad": {
+          "mean": 4.601920553786416,
+          "ci95_low": -27.938577053553587,
+          "ci95_high": 37.142418161126415
+        },
+        "driver_earnings_cad": {
+          "mean": -133.17772625132721,
+          "ci95_low": -157.45466318559514,
+          "ci95_high": -108.90078931705929
+        },
+        "subsidy_spend_cad": {
+          "mean": 11.066666666666666,
+          "ci95_low": 9.42744926542936,
+          "ci95_high": 12.705884067903973
+        },
+        "platform_net_revenue_cad": {
+          "mean": 137.77964680511363,
+          "ci95_low": 128.7937401291222,
+          "ci95_high": 146.76555348110506
+        },
+        "reposition_events": {
+          "mean": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "utilization_rate": {
+          "mean": -0.0035173938241882226,
+          "ci95_low": -0.004495731902400024,
+          "ci95_high": -0.0025390557459764214
+        }
+      },
+      "policy_strategy": "Firm quotes and sequential driver menu choice; origin\u2013destination shortage pricing",
+      "policy_objective": "Evaluate service, waiting and contribution under shared request and choice assumptions"
+    }
+  ],
+  "runtime_seconds": 59.88873604196124,
+  "replicate_count": 90,
+  "resolved_scenario": {
+    "project": {
+      "random_seed": 42,
+      "model_version": "0.6.0.dev0"
+    },
+    "simulation": {
+      "start_time": "00:00",
+      "end_time": "24:00",
+      "decision_interval_minutes": 5,
+      "fleet_size": 60,
+      "base_trip_count": 1200,
+      "demand_multiplier": 1.0,
+      "demand_profile": "synthetic_daily",
+      "request_probability": 0.8,
+      "rider_max_wait_minutes": 15
+    },
+    "network": {
+      "mode": "demo",
+      "graph_path": "data/processed/toronto_drive.graphml",
+      "traffic_profile_path": "data/processed/edge_traffic_profile.parquet",
+      "use_time_dependent_routing": true
+    },
+    "behavior": {
+      "profile": "shared",
+      "additional_bonus_response": false,
+      "marketplace_model": "driver_choice",
+      "rider_intercept": 2.0,
+      "rider_price_per_cad": 0.08,
+      "driver_occupied_penalty": 0.02
+    },
+    "policy": {
+      "name": "P0_fixed_baseline",
+      "matching_strategy": "policy_default",
+      "max_rider_premium_cad": 5.0,
+      "max_driver_bonus_cad": 12.0,
+      "subsidy_budget_cad": 500.0,
+      "fairness_bound_cad": 3.0,
+      "rider_price_elasticity": -0.3,
+      "driver_bonus_elasticity": 0.4,
+      "reposition_acceptance": 0.7,
+      "acceptance_intercept": 0.5,
+      "acceptance_earnings_per_cad": 0.1,
+      "acceptance_pickup_minutes_penalty": 0.18,
+      "od_origin_gain": 0.5,
+      "od_transfer_gain": 1.0,
+      "od_discount_gain": 0.5,
+      "predicted_demand_response_per_cad": 0.06,
+      "predicted_supply_response_per_cad": 0.04
+    }
+  },
+  "full_result_sha256": "0b8deb72dde254f58ac301227177cd2d8adb6bab46e784bf112a5b91276f3296",
+  "reversal_check": {
+    "status": "software_response_verified",
+    "scope": "controlled market-state reversal",
+    "same_route": true,
+    "snapshots": [
+      {
+        "minute": 480,
+        "quote": {
+          "request_id": "target",
+          "offered_at_min": 480,
+          "origin_shortage": -3.0,
+          "destination_shortage": 4.0,
+          "transfer_value": 7.0,
+          "fare": {
+            "baseline_fare_cad": 18.849789792754613,
+            "rider_adjustment_cad": -5,
+            "driver_bonus_cad": 7.0,
+            "rider_payment_cad": 13.849789792754613,
+            "driver_earnings_cad": 21.13734234456596,
+            "platform_contribution_cad": -7.287552551811345
+          }
+        }
+      },
+      {
+        "minute": 1080,
+        "quote": {
+          "request_id": "target",
+          "offered_at_min": 1080,
+          "origin_shortage": 5.0,
+          "destination_shortage": -4.0,
+          "transfer_value": -9.0,
+          "fare": {
+            "baseline_fare_cad": 18.849789792754613,
+            "rider_adjustment_cad": 2.5,
+            "driver_bonus_cad": 0.0,
+            "rider_payment_cad": 21.349789792754613,
+            "driver_earnings_cad": 14.13734234456596,
+            "platform_contribution_cad": 7.212447448188653
+          }
+        }
+      }
+    ],
+    "limitation": "Not an empirical test and not evidence of improved system outcomes"
+  }
+}

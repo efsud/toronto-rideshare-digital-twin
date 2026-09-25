@@ -14,14 +14,14 @@ from toronto_rideshare.config import load_config
 DEFAULTS = {
     "project": {"random_seed": 42, "model_version": "0.6.0.dev0"},
     "simulation": {
-        "start_time": "07:00",
-        "end_time": "10:00",
+        "start_time": "00:00",
+        "end_time": "24:00",
         "decision_interval_minutes": 5.0,
-        "fleet_size": 20,
-        "base_trip_count": 20,
+        "fleet_size": 60,
+        "base_trip_count": 1200,
         "demand_multiplier": 1.0,
-        "demand_profile": "uniform",
-        "request_probability": 1.0,
+        "demand_profile": "synthetic_daily",
+        "request_probability": 0.8,
         "rider_max_wait_minutes": 15.0,
     },
     "network": {
@@ -33,7 +33,7 @@ DEFAULTS = {
     "behavior": {
         "profile": "shared",
         "additional_bonus_response": False,
-        "marketplace_model": "legacy_offers",
+        "marketplace_model": "driver_choice",
         "rider_intercept": 2.0,
         "rider_price_per_cad": 0.08,
         "driver_occupied_penalty": 0.02,
