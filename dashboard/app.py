@@ -431,6 +431,68 @@ def explore_view():
             "Every driver menu includes gross pay, pickup burden and choice probability. "
             "An empty selected request means the driver stayed idle."
         )
+        responses = {
+            e["request_id"]: e
+            for e in decisions
+            if e["type"] in ("rider_quote_accepted", "rider_price_declined")
+        }
+        proposals = [e for e in decisions if e["type"] == "price_proposed"][-12:]
+        if proposals:
+            st.write("Latest rider quotes")
+            st.dataframe(
+                pd.DataFrame(
+                    [
+                        {
+                            "Request": e["request_id"],
+                            "Offered at": clock_label(e["time_min"]),
+                            "Rider price (CAD)": round(e["quote"]["fare"]["rider_payment_cad"], 2),
+                            "Driver gross pay (CAD)": round(
+                                e["quote"]["fare"]["driver_earnings_cad"], 2
+                            ),
+                            "Driver bonus (CAD)": round(e["quote"]["fare"]["driver_bonus_cad"], 2),
+                            "Origin shortage": e["quote"]["origin_shortage"],
+                            "Destination shortage": e["quote"]["destination_shortage"],
+                            "Rider response": "Accepted"
+                            if responses.get(e["request_id"], {}).get("type")
+                            == "rider_quote_accepted"
+                            else "Declined",
+                        }
+                        for e in proposals
+                    ]
+                ),
+                hide_index=True,
+                width="stretch",
+            )
+        menus = [e for e in decisions if e["type"] == "driver_choice"][-30:]
+        if menus:
+            selected = st.selectbox(
+                "Driver menu to inspect",
+                range(len(menus)),
+                index=len(menus) - 1,
+                format_func=lambda i: (
+                    f"{menus[i]['driver_id']} at {clock_label(menus[i]['time_min'])}"
+                ),
+            )
+            decision = menus[selected]
+            st.write("Driver selected: " + (decision["request_id"] or "Stay idle"))
+            st.caption(f"Probability of staying idle: {decision['outside_probability']:.1%}")
+            st.dataframe(
+                pd.DataFrame(
+                    [
+                        {
+                            "Request": item["request_id"],
+                            "Gross pay (CAD)": round(item["gross_earnings_cad"], 2),
+                            "Pickup (min)": round(item["pickup_min"], 1),
+                            "Occupied trip (min)": round(item["occupied_min"], 1),
+                            "Choice probability": f"{item['probability']:.1%}",
+                            "Selected": item["request_id"] == decision["request_id"],
+                        }
+                        for item in decision["menu"]
+                    ]
+                ),
+                hide_index=True,
+                width="stretch",
+            )
         st.json(decisions[-30:], expanded=False)
         st.metric(
             "Subsidies reserved for waiting/unfinished trips (CAD)",
