@@ -12,6 +12,7 @@ from toronto_rideshare.policies.pricing import rider_adjustment_cad
 
 
 class PolicyId(StrEnum):
+    ADAPTIVE = "adaptive_od"
     P0 = "P0_fixed_baseline"
     P1 = "P1_rider_pricing"
     P2 = "P2_driver_bonuses"
@@ -30,12 +31,25 @@ class PolicySettings:
     use_ortools: bool = False
     use_repositioning: bool = False
     use_behavior: bool = False
+    use_od_pricing: bool = False
     matching_strategy: str = "greedy"
     objective: str = "serve demand with minimum pickup time"
     strategy: str = "fixed fares and deterministic nearest-driver offers"
 
 
+ACTIVE_POLICIES = (PolicyId.P0, PolicyId.P5, PolicyId.ADAPTIVE)
+
+
 POLICY_REGISTRY: dict[PolicyId, PolicySettings] = {
+    PolicyId.ADAPTIVE: PolicySettings(
+        PolicyId.ADAPTIVE,
+        use_od_pricing=True,
+        use_rider_pricing=True,
+        use_driver_bonuses=True,
+        matching_strategy="driver_choice",
+        objective="encourage occupied trips toward relative driver shortage",
+        strategy="origin–destination incentives with competing-request driver choice",
+    ),
     PolicyId.P0: PolicySettings(PolicyId.P0),
     PolicyId.P1: PolicySettings(
         PolicyId.P1,

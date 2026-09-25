@@ -89,6 +89,11 @@ class SimulationEngine:
     policy_cfg: dict[str, Any] = field(default_factory=dict)
     behavior_profile: str = "legacy_v0.4"
     additional_bonus_response: bool = False
+    marketplace_model: str = "legacy_offers"
+    daily_behavior: dict = field(default_factory=dict)
+    quotes: dict = field(default_factory=dict, init=False)
+    quote_routes: dict = field(default_factory=dict, init=False)
+    history: list = field(default_factory=list, init=False)
     matching_strategy: str | None = None
     max_wait_time_min: float = 15.0
     reposition_events: int = 0
@@ -126,6 +131,9 @@ class SimulationEngine:
         self.reposition_events = 0
         self._trip_index = 0
         self.pending = []
+        self.quotes = {}
+        self.quote_routes = {}
+        self.history = []
         self.events = []
         self._active_movements = {}
         self._last_adjustments = {}
@@ -272,10 +280,70 @@ class SimulationEngine:
                     }
                 )
 
+    def _reposition(self, now, step_events):
+
+        def travel_cost(driver, target_zone):
+            if self.behavior and not driver_accepts_reposition(
+                config=self.behavior,
+                rng_value=self._draw("reposition", now, driver.driver_id, target_zone),
+            ):
+                return None
+            try:
+                return estimate_route(
+                    (driver.lat, driver.lon),
+                    zone_center(target_zone),
+                    routing=self.routing,
+                    departure_time=min_to_departure_time(now),
+                ).travel_time_min
+            except nx.NetworkXNoPath:
+                return None
+
+        imbalance = zone_demand_supply(self.pending, self.drivers)
+        assignments = suggest_reposition_targets(self.drivers, imbalance, travel_cost=travel_cost)
+        by_id = {driver.driver_id: driver for driver in self.drivers}
+        for driver_id, target_zone in sorted(assignments.items()):
+            driver = by_id[driver_id]
+            target = zone_center(target_zone)
+            route = estimate_route(
+                (driver.lat, driver.lon),
+                target,
+                routing=self.routing,
+                departure_time=min_to_departure_time(now),
+            )
+            self._record_route(route)
+            driver.status = DriverStatus.REPOSITIONING
+            driver.available_time_min = now + route.travel_time_min
+            self._active_movements[driver_id] = {
+                "driver_id": driver_id,
+                "phase": "repositioning",
+                "path": list(route.path),
+                "routing_source": route.mode,
+                "start_time_min": now,
+                "end_time_min": driver.available_time_min,
+                "start": [driver.lat, driver.lon],
+                "origin": [driver.lat, driver.lon],
+                "destination": list(target),
+                "destination_zone": target_zone,
+            }
+            self.reposition_events += 1
+            self.metrics.total_reposition_time_min += route.travel_time_min
+            step_events.append(
+                {
+                    "type": "reposition_started",
+                    "driver_id": driver_id,
+                    "target_zone": target_zone,
+                    "travel_time_min": route.travel_time_min,
+                }
+            )
+
     def step(self) -> dict[str, Any]:
         """Process exactly one decision epoch and return its state/events."""
         if self.finished:
             return self.last_snapshot
+        if self.marketplace_model == "driver_choice":
+            from toronto_rideshare.simulation.daily_marketplace import step_daily
+
+            return step_daily(self)
         now = min(self.clock.current_time_min, self.clock.end_time_min)
         self._processed_time = now
         step_events: list[dict[str, Any]] = []
@@ -368,62 +436,7 @@ class SimulationEngine:
                     )
 
         if settings and settings.use_repositioning:
-
-            def travel_cost(driver, target_zone):
-                if self.behavior and not driver_accepts_reposition(
-                    config=self.behavior,
-                    rng_value=self._draw("reposition", now, driver.driver_id, target_zone),
-                ):
-                    return None
-                try:
-                    return estimate_route(
-                        (driver.lat, driver.lon),
-                        zone_center(target_zone),
-                        routing=self.routing,
-                        departure_time=min_to_departure_time(now),
-                    ).travel_time_min
-                except nx.NetworkXNoPath:
-                    return None
-
-            imbalance = zone_demand_supply(self.pending, self.drivers)
-            assignments = suggest_reposition_targets(
-                self.drivers, imbalance, travel_cost=travel_cost
-            )
-            by_id = {driver.driver_id: driver for driver in self.drivers}
-            for driver_id, target_zone in sorted(assignments.items()):
-                driver = by_id[driver_id]
-                target = zone_center(target_zone)
-                route = estimate_route(
-                    (driver.lat, driver.lon),
-                    target,
-                    routing=self.routing,
-                    departure_time=min_to_departure_time(now),
-                )
-                self._record_route(route)
-                driver.status = DriverStatus.REPOSITIONING
-                driver.available_time_min = now + route.travel_time_min
-                self._active_movements[driver_id] = {
-                    "driver_id": driver_id,
-                    "phase": "repositioning",
-                    "path": list(route.path),
-                    "routing_source": route.mode,
-                    "start_time_min": now,
-                    "end_time_min": driver.available_time_min,
-                    "start": [driver.lat, driver.lon],
-                    "origin": [driver.lat, driver.lon],
-                    "destination": list(target),
-                    "destination_zone": target_zone,
-                }
-                self.reposition_events += 1
-                self.metrics.total_reposition_time_min += route.travel_time_min
-                step_events.append(
-                    {
-                        "type": "reposition_started",
-                        "driver_id": driver_id,
-                        "target_zone": target_zone,
-                        "travel_time_min": route.travel_time_min,
-                    }
-                )
+            self._reposition(now, step_events)
 
         available = [
             driver

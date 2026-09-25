@@ -14,5 +14,6 @@ network:
   mode: demo
 behavior:
   profile: shared
+  marketplace_model: driver_choice
 policy:
   name: P0_fixed_baseline

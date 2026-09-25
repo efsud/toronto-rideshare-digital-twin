@@ -211,7 +211,7 @@ def test_ui_factory_and_cli_have_identical_inputs_and_metrics():
 def test_shared_behavior_and_event_draws():
     from toronto_rideshare.policies.registry import PolicyId
 
-    engines = [create_engine({}, policy_id=p) for p in PolicyId]
+    engines = [create_engine({}, policy_id=p) for p in PolicyId if p != PolicyId.ADAPTIVE]
     assert all(e.behavior == engines[0].behavior for e in engines)
     assert engines[0]._draw("offer", "R1", "D1", 420) == engines[-1]._draw("offer", "R1", "D1", 420)
     assert engines[0].trips == engines[-1].trips

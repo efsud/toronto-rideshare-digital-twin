@@ -13,7 +13,7 @@ from toronto_rideshare.demand import generate_trips
 from toronto_rideshare.manifest import run_manifest
 from toronto_rideshare.marketplace.matching import RoutingContext
 from toronto_rideshare.policies.behavior import BehaviorConfig, OfferAcceptanceConfig
-from toronto_rideshare.policies.registry import POLICY_REGISTRY, PolicyId
+from toronto_rideshare.policies.registry import ACTIVE_POLICIES, POLICY_REGISTRY, PolicyId
 from toronto_rideshare.scenario import ScenarioConfig, stream_seed, time_minutes
 from toronto_rideshare.simulation import SimulationClock, SimulationEngine
 from toronto_rideshare.supply import initialize_fleet
@@ -158,6 +158,8 @@ def create_engine(
         behavior=behavior if not legacy or settings.use_behavior else None,
         behavior_profile=config["behavior"]["profile"],
         additional_bonus_response=config["behavior"]["additional_bonus_response"],
+        marketplace_model=config["behavior"]["marketplace_model"],
+        daily_behavior=config["behavior"],
         acceptance=OfferAcceptanceConfig(
             policy["acceptance_intercept"],
             policy["acceptance_earnings_per_cad"],
@@ -165,7 +167,9 @@ def create_engine(
         ),
         random_seed=seed if legacy else stream_seed(seed, "behavior"),
         policy_cfg=policy,
-        matching_strategy=None
+        matching_strategy="driver_choice"
+        if config["behavior"]["marketplace_model"] == "driver_choice"
+        else None
         if policy["matching_strategy"] == "policy_default"
         else policy["matching_strategy"],
         max_wait_time_min=sim["rider_max_wait_minutes"],
@@ -207,6 +211,11 @@ def run_experiment(
     }
 
     return {
+        "daily_trajectory": [
+            {k: v for k, v in row.items() if k not in ("zone_state", "routing_mode_counts")}
+            for row in engine.history
+            if row["time_min"] % 60 == 0 or row["time_min"] == clock.end_time_min
+        ],
         "timestamp": datetime.now(UTC).isoformat(),
         "manifest": run_manifest(config, engine),
         "config_path": str(config_path)
@@ -258,7 +267,21 @@ def run_policy_comparison(
     config = ScenarioConfig.from_source(config_path).as_dict()
     seed = int(config.get("project", {}).get("random_seed", 42))
     routing = load_routing_context(config) if load_configured_routing else None
-    policy_list = tuple(dict.fromkeys((PolicyId.P0, *(policies or tuple(PolicyId)))))
+    policy_list = tuple(
+        dict.fromkeys(
+            (
+                PolicyId.P0,
+                *(
+                    policies
+                    or (
+                        ACTIVE_POLICIES
+                        if config["behavior"]["marketplace_model"] == "driver_choice"
+                        else tuple(p for p in PolicyId if p != PolicyId.ADAPTIVE)
+                    )
+                ),
+            )
+        )
+    )
 
     results: list[dict[str, Any]] = []
     for pid in policy_list:
@@ -294,7 +317,21 @@ def run_repeated_policy_comparison(
     first_seed = int(
         base_seed if base_seed is not None else config.get("project", {}).get("random_seed", 42)
     )
-    policy_list = tuple(dict.fromkeys((PolicyId.P0, *(policies or tuple(PolicyId)))))
+    policy_list = tuple(
+        dict.fromkeys(
+            (
+                PolicyId.P0,
+                *(
+                    policies
+                    or (
+                        ACTIVE_POLICIES
+                        if config["behavior"]["marketplace_model"] == "driver_choice"
+                        else tuple(p for p in PolicyId if p != PolicyId.ADAPTIVE)
+                    )
+                ),
+            )
+        )
+    )
     routing = load_routing_context(config) if load_configured_routing else None
     replicates = [
         run_experiment(

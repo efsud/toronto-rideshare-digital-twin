@@ -14,14 +14,15 @@ def test_dashboard_starts_steps_resets_and_has_map():
     at.button(key="step").click().run()
     assert not at.exception
     assert at.session_state["engine"] is engine
-    assert engine.last_snapshot["processed_time_min"] == 425
+    assert engine.last_snapshot["processed_time_min"] == 5
     at.button(key="reset").click().run()
-    assert engine.clock.current_time_min == 420
+    assert engine.clock.current_time_min == 0
 
 
 def test_comparison_uses_applied_scenario():
     at = AppTest.from_file(str(APP), default_timeout=30).run()
     at.radio(key="workspace_view").set_value("Compare policies").run()
+    assert len(at.multiselect(key="comparison_policies").options) == 3
     at.multiselect(key="comparison_policies").set_value(["P0_fixed_baseline"])
     at.number_input(key="comparison_replicates").set_value(1)
     next(b for b in at.button if b.label == "Run policy comparison").click().run()
@@ -37,7 +38,7 @@ def test_setup_and_model_pages():
     assert not at.exception
     fleet = next(x for x in at.number_input if x.label == "Drivers in the fleet")
     fleet.set_value(7).run()
-    assert at.session_state["scenario"]["simulation"]["fleet_size"] == 20
+    assert at.session_state["scenario"]["simulation"]["fleet_size"] == 60
     next(b for b in at.button if b.label == "Apply scenario and start fresh").click().run()
     assert not at.exception
     assert len(at.session_state["engine"].drivers) == 7

@@ -36,3 +36,15 @@ Keep the goal active until every requirement is implemented and verified. Calibr
 Calibration direction confirmed by the user: use suitable public data and label remaining assumptions. Public road speeds can support travel-cost fitting; they cannot establish rider/driver price responses.
 
 Next integration steps: introduce the adaptive policy and three-policy menu; reserve a quote when proposed, store accepted rider prices, release reservations on decline/cancellation; build per-driver feasible menus; use common keyed choices and deterministic conflict resolution; connect chosen assignments to existing movement accounting; expose quote/choice event details and daily KPI/zone trajectories; add calibration fitting/holdout workflow and end-to-end reversal experiments.
+
+## Integrated daily marketplace — September 25 continuation
+
+The previous turn made concrete progress (committed daily-demand foundations). This turn integrates the firm quote and competing-request choice functions into `simulation/daily_marketplace.py`. The default dashboard now loads the 24-hour scenario and exposes exactly P0, P5 and adaptive OD pricing. Historical configurations retain the legacy offer engine for reproducibility.
+
+Implemented: pre-acceptance budget capping, accepted quote retention, cancellation reservation release, seeded rotating driver priority with an idle outside option, unique assignments, actual movement settlement, per-epoch history, hourly exported trajectories, and inspectable decision menus. The shared-state regression covers all three policies. Current tests: 98 passing; Ruff and diff checks pass. Seven targeted UI/decision tests were rerun after display changes.
+
+A full day under each policy used the identical 963 requests. Driver menus containing competing requests numbered 1,216 / 1,180 / 1,068 for P0 / P5 / adaptive respectively; P5 made 31 reposition movements. All three reconciled request populations and checked subsidy commitments plus settlement against the budget at every step. These are single-seed integration checks, not evidence that one policy performs better. Local report: `results/daily_three_policy_integration.json`.
+
+Chrome review on the current dashboard at port 8502 confirms full-day completion, the three-policy menu and persistent map legend. Desktop and 390-pixel views had no page errors or horizontal overflow in checked flows. The older process occupying 8501 did not have the new full-day button; it was not treated as current evidence.
+
+Still required before goal completion: calibration workflow using suitable public data with honest unsupported assumptions; controlled time-reversal experiments demonstrating adaptive mechanism response, paired full-day policy outcomes/uncertainty; richer temporal zone diagnostics and comparison curves; refresh documentation/release evidence, push reviewed changes to draft PR #1, verify CI, and perform the final requirement-by-requirement audit. The goal remains active.

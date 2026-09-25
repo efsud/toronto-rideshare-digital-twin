@@ -30,7 +30,14 @@ DEFAULTS = {
         "traffic_profile_path": "data/processed/edge_traffic_profile.parquet",
         "use_time_dependent_routing": True,
     },
-    "behavior": {"profile": "shared", "additional_bonus_response": False},
+    "behavior": {
+        "profile": "shared",
+        "additional_bonus_response": False,
+        "marketplace_model": "legacy_offers",
+        "rider_intercept": 2.0,
+        "rider_price_per_cad": 0.08,
+        "driver_occupied_penalty": 0.02,
+    },
     "policy": {
         "name": "P0_fixed_baseline",
         "matching_strategy": "policy_default",
@@ -44,6 +51,9 @@ DEFAULTS = {
         "acceptance_intercept": 0.5,
         "acceptance_earnings_per_cad": 0.1,
         "acceptance_pickup_minutes_penalty": 0.18,
+        "od_origin_gain": 0.5,
+        "od_transfer_gain": 1.0,
+        "od_discount_gain": 0.5,
         "predicted_demand_response_per_cad": 0.06,
         "predicted_supply_response_per_cad": 0.04,
     },
@@ -91,7 +101,7 @@ class ScenarioConfig:
         sim, policy = data["simulation"], data["policy"]
         if time_minutes(sim["end_time"]) < time_minutes(sim["start_time"]):
             raise ValueError("End time must not precede start time")
-        for section in ("project", "simulation", "policy"):
+        for section in ("project", "simulation", "policy", "behavior"):
             for key, value in data[section].items():
                 if isinstance(value, (int, float)) and not math.isfinite(value):
                     raise ValueError(f"{key} must be finite")
@@ -130,6 +140,28 @@ class ScenarioConfig:
         ):
             if policy[key] < 0:
                 raise ValueError(f"{key} must be nonnegative")
+        if data["behavior"]["marketplace_model"] not in ("legacy_offers", "driver_choice"):
+            raise ValueError("Unknown marketplace model")
+        for key in ("rider_price_per_cad", "driver_occupied_penalty"):
+            if data["behavior"][key] < 0:
+                raise ValueError(f"{key} must be nonnegative")
+        for key in ("od_origin_gain", "od_transfer_gain", "od_discount_gain"):
+            if policy[key] < 0:
+                raise ValueError(f"{key} must be nonnegative")
+        if (
+            policy["name"] == "adaptive_od"
+            and data["behavior"]["marketplace_model"] != "driver_choice"
+        ):
+            raise ValueError("Adaptive OD pricing requires the driver-choice marketplace")
+        if data["behavior"]["marketplace_model"] == "driver_choice":
+            if data["behavior"]["profile"] != "shared":
+                raise ValueError("Driver choice requires shared behavior")
+            if policy["name"] not in ("P0_fixed_baseline", "P5_repositioning", "adaptive_od"):
+                raise ValueError("The daily marketplace supports only the three active policies")
+            if policy["matching_strategy"] != "policy_default":
+                raise ValueError(
+                    "Daily policies share driver choice; matching overrides are unavailable"
+                )
         if policy["matching_strategy"] not in ("policy_default", "greedy", "optimal_batch"):
             raise ValueError("Unknown matching strategy")
         if data["network"]["mode"] not in ("demo", "network_research"):

@@ -6,7 +6,7 @@ from html import escape
 
 from shapely.geometry import mapping
 
-from toronto_rideshare.policies.registry import POLICY_REGISTRY, PolicyId
+from toronto_rideshare.policies.registry import ACTIVE_POLICIES, POLICY_REGISTRY, PolicyId
 from toronto_rideshare.zones import toronto_zone_cells
 from toronto_rideshare.zones.sampling import clipped_zone
 
@@ -14,6 +14,7 @@ POLICY_NAMES = dict(
     zip(
         PolicyId,
         (
+            "Adaptive · Origin–destination pricing",
             "P0 · Fixed-price baseline",
             "P1 · Rider pricing",
             "P2 · Driver incentives",
@@ -56,20 +57,25 @@ def policy_rows():
     return [
         {
             "Policy": POLICY_NAMES[p],
-            "Rider adjustment": "LP proxy"
+            "Rider adjustment": "Origin–destination rule"
+            if s.use_od_pricing
+            else "LP proxy"
             if s.use_ortools
             else "Imbalance rule"
             if s.use_rider_pricing
             else "None",
-            "Driver bonus": "LP proxy"
+            "Driver bonus": "Destination transfer rule"
+            if s.use_od_pricing
+            else "LP proxy"
             if s.use_ortools
             else "Imbalance rule"
             if s.use_driver_bonuses
             else "None",
-            "Matching": s.matching_strategy,
+            "Matching": "Driver choice among requests",
             "Repositioning": s.use_repositioning,
         }
         for p, s in POLICY_REGISTRY.items()
+        if p in ACTIVE_POLICIES
     ]
 
 

@@ -11,7 +11,7 @@ import streamlit as st
 
 from toronto_rideshare.experiments.runner import create_engine, run_repeated_policy_comparison
 from toronto_rideshare.manifest import METRIC_DEFINITIONS, run_manifest
-from toronto_rideshare.policies.registry import PolicyId
+from toronto_rideshare.policies.registry import ACTIVE_POLICIES, PolicyId
 from toronto_rideshare.presentation import (
     LEGEND,
     POLICY_NAMES,
@@ -46,8 +46,8 @@ def setup_view():
     with a:
         policy["name"] = st.selectbox(
             "Policy",
-            list(PolicyId),
-            index=list(PolicyId).index(PolicyId(policy["name"])),
+            list(ACTIVE_POLICIES),
+            index=list(ACTIVE_POLICIES).index(PolicyId(policy["name"])),
             format_func=lambda p: POLICY_NAMES[p],
             key="scenario_policy",
         )
@@ -92,48 +92,31 @@ def setup_view():
         "Demo uses straight-line estimates. Network research requires a "
         "local graph and excludes unreachable assignments."
     )
-    with st.expander("Behavior, pricing and matching assumptions"):
-        options = ["policy_default", "greedy", "optimal_batch"]
-        policy["matching_strategy"] = st.selectbox(
-            "Matching strategy",
-            options,
-            index=options.index(policy["matching_strategy"]),
-            format_func=lambda x: {
-                "policy_default": "Use policy default",
-                "greedy": "Nearest-driver greedy",
-                "optimal_batch": "Optimal batch (custom override)",
-            }[x],
+    with st.expander("Shared behavior and pricing assumptions"):
+        st.caption(
+            "Every policy uses these same rider and driver response functions. "
+            "Drivers choose among requests or stay idle; P5 also repositions idle drivers."
         )
-        config["behavior"]["profile"] = st.selectbox(
-            "Behavior profile",
-            ["shared", "legacy_v0.4"],
-            index=["shared", "legacy_v0.4"].index(config["behavior"]["profile"]),
-            format_func=lambda x: (
-                "Same assumptions across policies" if x == "shared" else "Legacy v0.4 behavior"
-            ),
-        )
-        config["behavior"]["additional_bonus_response"] = st.checkbox(
-            "Additional bonus response (experimental)",
-            config["behavior"]["additional_bonus_response"],
-            help="Default off: gross earnings already include the bonus.",
-        )
-        fields = [
-            ("rider_price_elasticity", "Rider price response coefficient", -10.0, 0.0),
-            ("driver_bonus_elasticity", "Additional bonus response coefficient", 0.0, 10.0),
+        behavior = config["behavior"]
+        for key, label, low, high in (
+            ("rider_intercept", "Rider acceptance intercept", -10.0, 10.0),
+            ("rider_price_per_cad", "Rider total-price sensitivity (per CAD)", 0.0, 1.0),
+            ("driver_occupied_penalty", "Driver occupied-time penalty (per minute)", 0.0, 1.0),
+        ):
+            behavior[key] = st.number_input(label, low, high, float(behavior[key]))
+        for key, label, low, high in (
+            ("acceptance_intercept", "Driver choice intercept", -10.0, 10.0),
+            ("acceptance_earnings_per_cad", "Driver gross-pay sensitivity (per CAD)", 0.0, 1.0),
+            ("acceptance_pickup_minutes_penalty", "Driver pickup penalty (per minute)", 0.0, 1.0),
             ("reposition_acceptance", "Reposition acceptance probability", 0.0, 1.0),
-            ("acceptance_intercept", "Driver acceptance intercept (log-odds)", -40.0, 40.0),
-            ("acceptance_earnings_per_cad", "Driver earnings response (per CAD)", 0.0, 10.0),
-            ("acceptance_pickup_minutes_penalty", "Pickup burden response (per minute)", 0.0, 10.0),
             ("max_rider_premium_cad", "Rider adjustment cap (CAD)", 0.0, 50.0),
             ("max_driver_bonus_cad", "Driver bonus cap (CAD)", 0.0, 50.0),
             ("subsidy_budget_cad", "Total subsidy budget (CAD)", 0.0, 10000.0),
-            ("fairness_bound_cad", "Maximum cross-zone adjustment difference (CAD)", 0.0, 50.0),
-            ("predicted_demand_response_per_cad", "LP demand response proxy (per CAD)", 0.0, 1.0),
-            ("predicted_supply_response_per_cad", "LP supply response proxy (per CAD)", 0.0, 1.0),
-        ]
-        cols = st.columns(2)
-        for i, (key, label, low, high) in enumerate(fields):
-            policy[key] = cols[i % 2].number_input(label, low, high, float(policy[key]))
+            ("od_origin_gain", "Origin shortage price gain", 0.0, 5.0),
+            ("od_transfer_gain", "Destination transfer bonus gain", 0.0, 5.0),
+            ("od_discount_gain", "Destination transfer discount gain", 0.0, 5.0),
+        ):
+            policy[key] = st.number_input(label, low, high, float(policy[key]))
         sim["rider_max_wait_minutes"] = st.number_input(
             "Maximum unassigned queue wait (minutes)",
             0.25,
@@ -141,8 +124,8 @@ def setup_view():
             float(sim["rider_max_wait_minutes"]),
         )
         st.caption(
-            "Base fare: $3.50 + $1.10/km + $0.35/occupied minute. Driver "
-            "gross share: 75%. Assumed, not Uber/Lyft prices."
+            "Base fare: CAD 3.50 + 1.10/km + 0.35/occupied minute; driver share 75%. "
+            "Assumed prices. Adaptive gains affect only origin–destination pricing."
         )
     with st.expander("Advanced data paths"):
         network["graph_path"] = st.text_input("Road graph (GraphML)", network["graph_path"])
@@ -253,6 +236,11 @@ def render_map(engine):
     event = st.pydeck_chart(
         deck, height=560, key="market_map", on_select="rerun", selection_mode="single-object"
     )
+    if metric in ("Rider adjustment", "Driver bonus"):
+        st.caption(
+            "Mean quote adjustment at each origin in the latest epoch; "
+            "inspect trips for OD-specific prices."
+        )
     st.caption(
         f"{metric} · {ZONE_METRICS[metric][1]} · scale −{extent:g} to +{extent:g}. "
         "Blue: negative; neutral: zero; amber: positive."
@@ -337,7 +325,8 @@ def explore_view():
         advance_minutes(engine, step * 6)
     if st.button("Run to end of day / scenario", disabled=engine.finished):
         with st.spinner("Simulating all remaining decisions…"):
-            engine.run()
+            while not engine.finished:
+                engine.step()
     snapshot = engine.last_snapshot
     st.caption(
         f"Processed through {clock_label(snapshot['processed_time_min'])} · "
@@ -377,6 +366,37 @@ def explore_view():
     ):
         col.metric(label, value, help=help_text, border=True)
     render_map(engine)
+    if engine.history:
+        st.subheader("How the day changes")
+        history = pd.DataFrame(
+            [
+                {k: v for k, v in row.items() if k not in ("zone_state", "routing_mode_counts")}
+                for row in engine.history
+            ]
+        )
+        st.line_chart(
+            history, x="time_min", y=["completed_trips", "waiting_trips", "in_progress_trips"]
+        )
+        st.caption(
+            "Elapsed minutes from midnight. Counts are cumulative for completions; "
+            "waiting and in-progress counts show the current population."
+        )
+    with st.expander("Price proposals and rider/driver decisions", expanded=False):
+        decisions = [
+            e
+            for e in engine.events
+            if e["type"]
+            in ("price_proposed", "rider_quote_accepted", "rider_price_declined", "driver_choice")
+        ]
+        st.caption(
+            "Every driver menu includes gross pay, pickup burden and choice probability. "
+            "An empty selected request means the driver stayed idle."
+        )
+        st.json(decisions[-30:], expanded=False)
+        st.metric(
+            "Subsidies reserved for waiting/unfinished trips (CAD)",
+            f"{snapshot.get('committed_subsidy_cad', 0):.2f}",
+        )
     st.subheader("Why did that happen?")
     events = snapshot["events"]
     if not events:
@@ -412,6 +432,7 @@ def explore_view():
                 "manifest": run_manifest(engine.scenario, engine),
                 "snapshot": snapshot,
                 "events": engine.events,
+                "history": engine.history,
             },
             indent=2,
         ),
@@ -428,25 +449,19 @@ def compare_view():
     )
     policies = st.multiselect(
         "Policies to compare",
-        list(PolicyId),
-        default=list(PolicyId),
+        list(ACTIVE_POLICIES),
+        default=list(ACTIVE_POLICIES),
         format_func=lambda p: POLICY_NAMES[p],
         key="comparison_policies",
     )
     n = st.number_input(
         "Paired seeds · 3 for preview, 30 for research", 1, 100, 30, key="comparison_replicates"
     )
-    controlled = st.selectbox(
-        "Comparison design",
-        ["Policy-specific matching", "Hold greedy matching fixed", "Hold optimal batch fixed"],
+    st.caption(
+        "All three policies share the same driver-choice mechanism and behavioral parameters."
     )
     if st.button("Run policy comparison", type="primary"):
         config = ScenarioConfig.from_source(st.session_state.scenario).as_dict()
-        config["policy"]["matching_strategy"] = {
-            "Policy-specific matching": "policy_default",
-            "Hold greedy matching fixed": "greedy",
-            "Hold optimal batch fixed": "optimal_batch",
-        }[controlled]
         if config["behavior"]["profile"] != "shared":
             st.warning(
                 "Legacy behavior differs by policy. These are not intervention-only comparisons."
@@ -504,7 +519,7 @@ def model_view():
         "Research prototype · software tests, empirical accuracy and "
         "human usability are separate evidence categories."
     )
-    handbook = ROOT / "docs" / "MODEL_HANDBOOK.md"
+    handbook = ROOT / "docs" / "DAILY_MARKETPLACE.md"
     if handbook.exists():
         st.markdown(handbook.read_text())
     st.subheader("Data and validation evidence")
@@ -546,7 +561,7 @@ def main():
     st.write("A transparent ride-hailing simulator for research and learning.")
     if "scenario" not in st.session_state:
         st.session_state.scenario = ScenarioConfig.from_source(
-            ROOT / "configs/experiments/baseline_run.yaml"
+            ROOT / "configs/experiments/full_day.yaml"
         ).as_dict()
     if "engine" not in st.session_state:
         st.session_state.engine = create_engine(st.session_state.scenario)
